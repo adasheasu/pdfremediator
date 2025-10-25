@@ -1,0 +1,10 @@
+# PDF Remediator Requirements
+# Python 3.7+ required
+
+# Core dependency for PDF manipulation
+pikepdf>=8.0.0
+
+# pikepdf dependencies (usually installed automatically)
+# qpdf - Backend library for PDF operations
+# lxml - XML processing (used by pikepdf)
+# Pillow - Image processing (optional, for image extraction)
