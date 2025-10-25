@@ -12,6 +12,7 @@ A comprehensive Python tool for remediating PDF documents to meet WCAG 2.2 Level
 
 - **Intelligent Image Tagging**: Automatically detects decorative vs. descriptive images
 - **Alt Text Generation**: Context-aware alt text for all images
+- **Artifact Marking**: Ensures all content is either tagged or marked as decorative artifacts
 - **Document Structure**: Complete tagging (headings, paragraphs, lists, tables)
 - **Table Formatting**: Header detection and summary generation
 - **Link Improvement**: Converts generic link text to descriptive alternatives
@@ -24,7 +25,7 @@ A comprehensive Python tool for remediating PDF documents to meet WCAG 2.2 Level
 | Criterion | Coverage |
 |-----------|----------|
 | 1.1.1 Non-text Content | ✓ Alt text (decorative vs descriptive) |
-| 1.3.1 Info and Relationships | ✓ Document structure, tables, headings |
+| 1.3.1 Info and Relationships | ✓ Document structure, tables, headings, **artifact marking** |
 | 1.3.2 Meaningful Sequence | ✓ Reading order optimization |
 | 2.4.2 Page Titled | ✓ Document title |
 | 2.4.4 Link Purpose | ✓ Descriptive link text |
@@ -123,6 +124,7 @@ Images Tagged:           12
   - Descriptive:         9
 Tables Tagged:           2
 Headings Tagged:         5
+Artifacts Marked:        2
 Links Fixed:             8
 
 WCAG 2.2 AA Compliance: 100%
@@ -135,11 +137,12 @@ WCAG 2.2 AA Compliance: 100%
 3. ✅ **Structure Tree** - Creates complete tagging structure
 4. ✅ **Image Alt Text** - Adds contextual descriptions
 5. ✅ **Decorative Images** - Marks appropriately
-6. ✅ **Reading Order** - Optimizes for screen readers
-7. ✅ **Link Text** - Improves generic links
-8. ✅ **Table Structure** - Adds headers and summaries
-9. ✅ **Metadata** - Complete document properties
-10. ✅ **Layer Flattening** - Enables proper tagging
+6. ✅ **Artifact Marking** - Marks unmarked content as decorative artifacts
+7. ✅ **Reading Order** - Optimizes for screen readers
+8. ✅ **Link Text** - Improves generic links
+9. ✅ **Table Structure** - Adds headers and summaries
+10. ✅ **Metadata** - Complete document properties
+11. ✅ **Layer Flattening** - Enables proper tagging
 
 ## Manual Review Required
 
@@ -315,7 +318,21 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for gu
 
 ## Version History
 
-### v2.0 - Enhanced (Current)
+### v2.1 - Artifact Marking (Current - October 2025)
+- **NEW**: Artifact marking for unmarked content
+- **NEW**: Ensures all content is either tagged or marked as decorative
+- **ENHANCED**: WCAG 1.3.1 compliance with artifact detection
+- **ENHANCED**: Reporting includes artifacts_marked statistic
+- Intelligent image classification
+- Automatic alt text generation
+- Complete structure tagging
+- Table structure with summaries
+- Link description improvements
+- Reading order optimization
+- PDF layer flattening
+- Enhanced reporting
+
+### v2.0 - Enhanced
 - Intelligent image classification
 - Automatic alt text generation
 - Complete structure tagging
