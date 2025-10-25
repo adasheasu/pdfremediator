@@ -10,8 +10,11 @@ A comprehensive Python tool for remediating PDF documents to meet WCAG 2.2 Level
 
 ### 🎯 Core Capabilities
 
+- **⚠️ OCR Detection** *(NEW v2.4)*: Automatically detects graphically-rendered PDFs requiring OCR before remediation
 - **🤖 AI-Powered Alt Text** *(NEW)*: Uses Claude/GPT-4 vision to generate context-aware, WCAG-compliant alt-text
-- **Intelligent Image Tagging**: Automatically detects decorative vs. descriptive images
+- **🔧 Tag Correction** *(NEW v2.3)*: Automatically detects and fixes incorrectly placed structure tags
+- **🎯 Tag-Aware Remediation** *(v2.2)*: Automatically detects and preserves existing proper tags, preventing duplicates
+- **Intelligent Image Tagging**: Automatically detects decorative vs. descriptive images, including full-page backgrounds
 - **Alt Text Generation**: Context-aware alt text for all images (heuristic or AI)
 - **Artifact Marking**: Ensures all content is either tagged or marked as decorative artifacts
 - **Document Structure**: Complete tagging (headings, paragraphs, lists, tables)
@@ -100,9 +103,12 @@ python pdf_remediator.py input.pdf --analyze-only
 - [Usage Guide](docs/USAGE.md) - Comprehensive usage examples
 - [API Reference](docs/API.md) - Python API documentation
 - [Enhanced Features](docs/ENHANCED_FEATURES.md) - Advanced capabilities
+- **[OCR Detection Guide](OCR_DETECTION_GUIDE.md)** - *(NEW v2.4)* Automatic graphically-rendered PDF detection
 - **[AI Alt-Text Quick Start](AI_QUICK_START.md)** - *(NEW)* Get started with AI in 5 minutes
 - **[AI Alt-Text Guide](docs/AI_ALT_TEXT_GUIDE.md)** - *(NEW)* Complete AI features guide
 - **[AI API Comparison](docs/AI_VISION_API_COMPARISON.md)** - *(NEW)* Provider comparison
+- **[Tag Correction Guide](TAG_CORRECTION_GUIDE.md)** - *(NEW v2.3)* Automatic tag type validation and correction
+- **[Tag Detection Guide](TAG_DETECTION_GUIDE.md)** - *(v2.2)* Smart tag-aware remediation
 - [Contributing](CONTRIBUTING.md) - How to contribute
 
 ## Examples
@@ -148,6 +154,8 @@ Images Tagged:           12
   - Descriptive:         9
 Tables Tagged:           2
 Headings Tagged:         5
+Tag Types Corrected:     3
+Hierarchy Issues Fixed:  1
 Artifacts Marked:        2
 Links Fixed:             8
 
@@ -161,12 +169,14 @@ WCAG 2.2 AA Compliance: 100%
 3. ✅ **Structure Tree** - Creates complete tagging structure
 4. ✅ **Image Alt Text** - Adds contextual descriptions
 5. ✅ **Decorative Images** - Marks appropriately
-6. ✅ **Artifact Marking** - Marks unmarked content as decorative artifacts
-7. ✅ **Reading Order** - Optimizes for screen readers
-8. ✅ **Link Text** - Improves generic links
-9. ✅ **Table Structure** - Adds headers and summaries
-10. ✅ **Metadata** - Complete document properties
-11. ✅ **Layer Flattening** - Enables proper tagging
+6. ✅ **Tag Type Validation** - Corrects incorrectly placed structure tags *(NEW v2.3)*
+7. ✅ **Heading Hierarchy** - Fixes skipped levels and ensures proper order *(NEW v2.3)*
+8. ✅ **Artifact Marking** - Marks unmarked content as decorative artifacts
+9. ✅ **Reading Order** - Optimizes for screen readers
+10. ✅ **Link Text** - Improves generic links
+11. ✅ **Table Structure** - Adds headers and summaries
+12. ✅ **Metadata** - Complete document properties
+13. ✅ **Layer Flattening** - Enables proper tagging
 
 ## Manual Review Required
 
@@ -342,7 +352,35 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for gu
 
 ## Version History
 
-### v2.1 - Artifact Marking (Current - October 2025)
+### v2.4 - OCR Detection (Current - January 2025)
+- **NEW**: Automatic detection of graphically-rendered PDFs
+- **NEW**: CID-encoded font detection in content streams
+- **NEW**: Large background image detection (>1500px)
+- **NEW**: Prominent warning message with OCR recommendations
+- **ENHANCED**: Image classification marks full-page backgrounds as decorative
+- **ENHANCED**: Critical accessibility issue added for OCR-required PDFs
+- See [OCR_DETECTION_GUIDE.md](OCR_DETECTION_GUIDE.md) for details
+
+### v2.3 - Tag Correction (January 2025)
+- **NEW**: Automatic tag type validation and correction
+- **NEW**: Detects and fixes incorrectly placed structure tags (e.g., Image tagged as Table)
+- **NEW**: Heading hierarchy correction (fixes skipped levels, ensures H1 start)
+- **NEW**: Structure element type mismatch detection
+- **NEW**: In-place tag type correction preserving content
+- **ENHANCED**: More robust structure tree validation
+- **ENHANCED**: Better error detection and reporting
+- See [TAG_CORRECTION_GUIDE.md](TAG_CORRECTION_GUIDE.md) for details
+
+### v2.2 - Tag-Aware Remediation (January 2025)
+- **NEW**: Intelligent tag detection for images, tables, headings, and reading order
+- **NEW**: Quality validation for existing alt-text
+- **NEW**: Automatic skip of properly tagged content
+- **ENHANCED**: Prevents duplicate tag creation on already-tagged PDFs
+- **ENHANCED**: Preserves high-quality manual tagging work
+- **ENHANCED**: Faster processing of already-tagged PDFs (skips what's done)
+- See [TAG_DETECTION_GUIDE.md](TAG_DETECTION_GUIDE.md) for details
+
+### v2.1 - Artifact Marking (October 2025)
 - **NEW**: Artifact marking for unmarked content
 - **NEW**: Ensures all content is either tagged or marked as decorative
 - **ENHANCED**: WCAG 1.3.1 compliance with artifact detection
@@ -445,4 +483,4 @@ This tool provides automated accessibility improvements. Always:
 
 **Made with ❤️ for accessibility**
 
-*Last Updated: October 2025*
+*Last Updated: January 2025*
