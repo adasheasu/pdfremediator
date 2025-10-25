@@ -26,16 +26,66 @@ A comprehensive Python tool for remediating PDF documents to meet WCAG 2.2 Level
 
 ### ✅ WCAG 2.2 AA Compliance
 
-| Criterion | Coverage |
-|-----------|----------|
-| 1.1.1 Non-text Content | ✓ Alt text (decorative vs descriptive) |
-| 1.3.1 Info and Relationships | ✓ Document structure, tables, headings, **artifact marking** |
-| 1.3.2 Meaningful Sequence | ✓ Reading order optimization |
-| 2.4.2 Page Titled | ✓ Document title |
-| 2.4.4 Link Purpose | ✓ Descriptive link text |
-| 2.4.6 Headings and Labels | ✓ Heading hierarchy |
-| 3.1.1 Language of Page | ✓ Document language |
-| 4.1.2 Name, Role, Value | ✓ Form field labels |
+This tool remediates PDFs to **WCAG 2.2 Level AA** standards, covering both Level A and Level AA success criteria.
+
+#### Automated Compliance Coverage
+
+| Level | Criterion | What Tool Does |
+|-------|-----------|----------------|
+| **A** | **1.1.1 Non-text Content** | ✓ Alt text for images (decorative vs descriptive) |
+| **A** | **1.3.1 Info and Relationships** | ✓ Document structure, tables, headings, artifact marking |
+| **A** | **1.3.2 Meaningful Sequence** | ✓ Reading order optimization |
+| **A** | **2.4.2 Page Titled** | ✓ Document title |
+| **A** | **3.1.1 Language of Page** | ✓ Document language specification |
+| **A** | **4.1.2 Name, Role, Value** | ✓ Form field labels |
+| **AA** | **2.4.4 Link Purpose (In Context)** | ✓ Descriptive link text |
+| **AA** | **2.4.6 Headings and Labels** | ✓ Heading hierarchy |
+
+#### What It Does Well
+
+- ✅ **Automated technical compliance** - Handles most structural WCAG requirements
+- ✅ **PDF structure and tagging** - Creates proper document structure tree
+- ✅ **Content identification** - Tags images, links, forms, tables correctly
+- ✅ **Screen reader optimization** - Proper reading order and semantic markup
+- ✅ **Issue detection** - Identifies and fixes common accessibility problems
+
+#### Requires Manual Review
+
+- ⚠️ **Alt text accuracy** - AI/heuristic-generated content needs human verification
+- ⚠️ **Color contrast** (1.4.3) - Cannot be checked programmatically in PDFs
+- ⚠️ **Keyboard accessibility** - Forms and interactive elements need manual testing
+- ⚠️ **Complex tables** - Structure may require adjustment for nested tables
+- ⚠️ **Content accuracy** - Verify auto-generated descriptions match intent
+
+#### Out of Scope (Not Automated)
+
+- ❌ **Flashing content** (2.3.1) - Time-based media restrictions
+- ❌ **Audio/Video** - Captions, audio descriptions, transcripts
+- ❌ **Mathematical formulas** - Requires MathML (not supported)
+- ❌ **Cognitive accessibility** - Reading level, consistent navigation patterns
+- ❌ **Complex interactions** - Custom widgets, dynamic content
+
+#### Validation Workflow
+
+After remediation, validate with:
+
+1. **Automated Tools**:
+   - [PAC 3](https://www.access-for-all.ch/en/pdf-lab/pdf-accessibility-checker-pac.html) - PDF/UA validation
+   - Adobe Acrobat Pro - Accessibility Checker
+   - CommonLook PDF Validator
+
+2. **Manual Testing**:
+   - Screen readers (NVDA, JAWS, VoiceOver)
+   - Keyboard-only navigation
+   - Reading order verification
+   - Alt text quality review
+
+3. **Professional Review**:
+   - Certified accessibility specialist review
+   - User testing with people with disabilities
+   - Legal compliance verification (Section 508, ADA, etc.)
+
+**Important**: This tool provides **technical accessibility compliance** but human review is essential for **content quality and true accessibility**.
 
 ## Quick Start
 
