@@ -10,8 +10,9 @@ A comprehensive Python tool for remediating PDF documents to meet WCAG 2.2 Level
 
 ### 🎯 Core Capabilities
 
+- **🤖 AI-Powered Alt Text** *(NEW)*: Uses Claude/GPT-4 vision to generate context-aware, WCAG-compliant alt-text
 - **Intelligent Image Tagging**: Automatically detects decorative vs. descriptive images
-- **Alt Text Generation**: Context-aware alt text for all images
+- **Alt Text Generation**: Context-aware alt text for all images (heuristic or AI)
 - **Artifact Marking**: Ensures all content is either tagged or marked as decorative artifacts
 - **Document Structure**: Complete tagging (headings, paragraphs, lists, tables)
 - **Table Formatting**: Header detection and summary generation
@@ -52,6 +53,9 @@ pip install -r requirements.txt
 # Remediate a PDF with automatic features
 python pdf_remediator.py input.pdf
 
+# With AI-powered alt-text (NEW!)
+python pdf_remediator.py input.pdf --use-ai-alt-text
+
 # Specify output file and metadata
 python pdf_remediator.py input.pdf \
   -o output.pdf \
@@ -59,6 +63,23 @@ python pdf_remediator.py input.pdf \
   --author "Author Name" \
   --language "en-US"
 ```
+
+### 🤖 AI Alt-Text Generation *(NEW)*
+
+Generate high-quality, context-aware alt-text using AI vision models:
+
+```bash
+# Install AI dependencies
+pip install anthropic  # or: pip install openai
+
+# Set API key
+export ANTHROPIC_API_KEY='sk-ant-...'
+
+# Use AI alt-text
+python pdf_remediator.py input.pdf --use-ai-alt-text
+```
+
+**See [AI_QUICK_START.md](AI_QUICK_START.md) for full guide**
 
 ### Analyze Only (No Changes)
 
@@ -79,6 +100,9 @@ python pdf_remediator.py input.pdf --analyze-only
 - [Usage Guide](docs/USAGE.md) - Comprehensive usage examples
 - [API Reference](docs/API.md) - Python API documentation
 - [Enhanced Features](docs/ENHANCED_FEATURES.md) - Advanced capabilities
+- **[AI Alt-Text Quick Start](AI_QUICK_START.md)** - *(NEW)* Get started with AI in 5 minutes
+- **[AI Alt-Text Guide](docs/AI_ALT_TEXT_GUIDE.md)** - *(NEW)* Complete AI features guide
+- **[AI API Comparison](docs/AI_VISION_API_COMPARISON.md)** - *(NEW)* Provider comparison
 - [Contributing](CONTRIBUTING.md) - How to contribute
 
 ## Examples
