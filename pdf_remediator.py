@@ -8,7 +8,6 @@ This script provides comprehensive PDF accessibility remediation including:
 - Table structure with headers and summaries
 - Link text improvement
 - Reading order optimization
-- PDF flattening for layered documents
 - Complete WCAG 2.2 Level AA compliance
 
 Key WCAG 2.2 AA Requirements Addressed:
@@ -286,51 +285,6 @@ class EnhancedPDFRemediator:
             print(f"Error loading PDF: {e}")
             return False
 
-    def flatten_pdf(self) -> bool:
-        """
-        Flatten PDF layers so content can be properly tagged.
-        Converts optional content groups (layers) to regular content.
-        """
-        try:
-            print("Flattening PDF layers...")
-
-            # Remove optional content groups (layers)
-            if '/OCProperties' in self.pdf.Root:
-                del self.pdf.Root['/OCProperties']
-                print("  ✓ Removed optional content properties")
-
-            # Process each page to flatten form XObjects and annotations
-            for page_num, page in enumerate(self.pdf.pages, 1):
-                # Flatten annotations to content
-                if '/Annots' in page:
-                    print(f"  Page {page_num}: Flattening annotations")
-                    # Note: Full flattening requires rendering, which is complex
-                    # We'll mark them as needing attention
-
-                # Remove optional content from resources
-                if '/Properties' in page.get('/Resources', {}):
-                    resources = page.Resources
-                    if '/Properties' in resources:
-                        # Check for optional content references
-                        props = resources.Properties
-                        for prop_name in list(props.keys()):
-                            prop_obj = props[prop_name]
-                            if '/Type' in prop_obj and prop_obj.Type == '/OCG':
-                                print(f"  Page {page_num}: Found optional content group")
-
-            issue = AccessibilityIssue(
-                category="Document Structure",
-                severity="major",
-                description="Flattened PDF layers for proper tagging",
-                wcag_criterion="1.3.1 Info and Relationships",
-                remediated=True
-            )
-            self.report.issues_fixed.append(issue)
-            return True
-
-        except Exception as e:
-            print(f"Warning: Could not fully flatten PDF: {e}")
-            return False
 
     def analyze_images(self) -> List[ImageInfo]:
         """Analyze all images in the PDF and determine if decorative."""
@@ -1652,12 +1606,7 @@ class EnhancedPDFRemediator:
 
         print("Starting comprehensive remediation...")
 
-        # 1. Flatten PDF if needed
-        if options.get('flatten', True):
-            if self.flatten_pdf():
-                fixed_count += 1
-
-        # 2. Fix document title
+        # 1. Fix document title
         if self._fix_document_title(options.get('title', 'Untitled Document')):
             fixed_count += 1
 
@@ -2066,8 +2015,8 @@ Examples:
   # Specify output filename
   %(prog)s input.pdf -o output.pdf
 
-  # Add metadata and flatten layers
-  %(prog)s input.pdf --title "My Document" --author "John Doe" --flatten
+  # Add metadata
+  %(prog)s input.pdf --title "My Document" --author "John Doe"
 
   # Analyze only (no remediation)
   %(prog)s input.pdf --analyze-only
@@ -2082,7 +2031,6 @@ Features:
   - Heading hierarchy tagging
   - Link description improvements
   - Reading order optimization
-  - PDF layer flattening
   - List tagging
   - Complete WCAG 2.2 AA compliance
         """
@@ -2097,10 +2045,6 @@ Features:
     parser.add_argument('--subject', help='Document subject')
     parser.add_argument('--keywords', help='Document keywords')
     parser.add_argument('--language', default='en-US', help='Document language (default: en-US)')
-    parser.add_argument('--flatten', action='store_true', default=True,
-                       help='Flatten PDF layers (default: True)')
-    parser.add_argument('--no-flatten', action='store_false', dest='flatten',
-                       help='Skip flattening PDF layers')
     parser.add_argument('--report-format', choices=['text', 'json'], default='text',
                        help='Report format (default: text)')
     parser.add_argument('--report-file', help='Save report to file')
@@ -2134,8 +2078,7 @@ Features:
             'author': args.author,
             'subject': args.subject,
             'keywords': args.keywords,
-            'language': args.language,
-            'flatten': args.flatten
+            'language': args.language
         }
 
         fixed = remediator.remediate(options)
