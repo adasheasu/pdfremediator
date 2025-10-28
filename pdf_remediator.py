@@ -64,7 +64,7 @@ class ImageInfo:
     def determine_if_decorative(self) -> bool:
         """
         Determine if image is likely decorative based on size and characteristics.
-        Decorative images include: lines, borders, backgrounds, small icons, full-page layouts
+        Decorative images include: lines, borders, backgrounds, small icons
         """
         # Very small images are likely decorative
         if self.width < 20 or self.height < 20:
@@ -77,11 +77,6 @@ class ImageInfo:
 
         # Very small area (less than 400 pixels total)
         if self.width * self.height < 400:
-            return True
-
-        # Very large images are likely full-page backgrounds/layouts
-        # Typically > 1500 pixels in either dimension suggests a full-page background
-        if self.width > 1500 or self.height > 1500:
             return True
 
         return False
@@ -671,463 +666,6 @@ class EnhancedPDFRemediator:
         self.annotations = annotations
         return annotations
 
-    def _is_image_already_properly_tagged(self, img_name: str, page_num: int) -> Tuple[bool, str]:
-        """
-        Check if image has proper structure element with meaningful alt-text.
-
-        Args:
-            img_name: Name of the image XObject
-            page_num: Page number where image appears
-
-        Returns:
-            Tuple of (is_tagged, alt_text) - is_tagged is True if properly tagged
-        """
-        try:
-            if '/StructTreeRoot' not in self.pdf.Root:
-                return False, ""
-
-            struct_tree = self.pdf.Root.StructTreeRoot
-            if '/K' not in struct_tree or not struct_tree.K:
-                return False, ""
-
-            struct_elements = struct_tree.K
-
-            # Search for existing Figure element for this image
-            for elem in struct_elements:
-                try:
-                    if not (isinstance(elem, dict) or hasattr(elem, 'get')):
-                        continue
-
-                    struct_type = elem.get('/S', '')
-
-                    # Check if it's a Figure (image) element
-                    if struct_type not in ['/Figure', Name('/Figure')]:
-                        continue
-
-                    # Check if title matches this image (approximate matching)
-                    title = str(elem.get('/T', ''))
-                    if f"page {page_num}" in title.lower() and img_name[1:] in title:
-                        # Found a matching structure element, check alt text
-                        alt_text = str(elem.get('/Alt', ''))
-
-                        # Validate alt text quality
-                        if alt_text and self._validate_alt_text_for_content(alt_text):
-                            return True, alt_text
-
-                        # Alt text exists but is generic/poor quality
-                        if alt_text:
-                            return False, alt_text
-
-                        # No alt text
-                        return False, ""
-
-                except Exception:
-                    continue
-
-            return False, ""
-
-        except Exception as e:
-            print(f"  Warning: Error checking if image already tagged: {e}")
-            return False, ""
-
-    def _is_table_already_properly_tagged(self, page_num: int) -> bool:
-        """
-        Check if table has proper structure with header rows/columns.
-
-        Args:
-            page_num: Page number where table appears
-
-        Returns:
-            True if table is properly tagged with headers
-        """
-        try:
-            if '/StructTreeRoot' not in self.pdf.Root:
-                return False
-
-            struct_tree = self.pdf.Root.StructTreeRoot
-            if '/K' not in struct_tree or not struct_tree.K:
-                return False
-
-            struct_elements = struct_tree.K
-
-            # Search for existing Table element on this page
-            for elem in struct_elements:
-                try:
-                    if not (isinstance(elem, dict) or hasattr(elem, 'get')):
-                        continue
-
-                    struct_type = elem.get('/S', '')
-
-                    # Check if it's a Table element
-                    if struct_type not in ['/Table', Name('/Table')]:
-                        continue
-
-                    # Check if it has child elements (rows/cells)
-                    if '/K' not in elem or not elem.K:
-                        continue
-
-                    # Check for header rows (TH elements)
-                    has_headers = False
-                    for child in elem.K:
-                        try:
-                            if not (isinstance(child, dict) or hasattr(child, 'get')):
-                                continue
-
-                            child_type = child.get('/S', '')
-                            if child_type in ['/TH', Name('/TH')]:
-                                has_headers = True
-                                break
-                        except:
-                            continue
-
-                    # Table exists with proper structure
-                    if has_headers:
-                        return True
-
-                except Exception:
-                    continue
-
-            return False
-
-        except Exception as e:
-            print(f"  Warning: Error checking if table already tagged: {e}")
-            return False
-
-    def _is_heading_structure_valid(self) -> bool:
-        """
-        Check if heading hierarchy is properly ordered (no skipped levels).
-
-        Returns:
-            True if heading structure is valid
-        """
-        try:
-            if '/StructTreeRoot' not in self.pdf.Root:
-                return False
-
-            struct_tree = self.pdf.Root.StructTreeRoot
-            if '/K' not in struct_tree or not struct_tree.K:
-                return False
-
-            struct_elements = struct_tree.K
-
-            # Collect all heading elements with their levels
-            headings = []
-            for elem in struct_elements:
-                try:
-                    if not (isinstance(elem, dict) or hasattr(elem, 'get')):
-                        continue
-
-                    struct_type = str(elem.get('/S', ''))
-
-                    # Check if it's a heading (H1-H6)
-                    if struct_type.startswith('/H') or struct_type.startswith('H'):
-                        level_str = struct_type.replace('/H', '').replace('H', '')
-                        try:
-                            level = int(level_str)
-                            if 1 <= level <= 6:
-                                headings.append(level)
-                        except ValueError:
-                            continue
-
-                except Exception:
-                    continue
-
-            # No headings found - not properly tagged
-            if not headings:
-                return False
-
-            # Check heading hierarchy - should start with H1 and not skip levels
-            if headings[0] != 1:
-                return False  # Should start with H1
-
-            # Check for skipped levels
-            prev_level = 0
-            for level in headings:
-                if level > prev_level + 1 and prev_level > 0:
-                    return False  # Skipped a level
-                prev_level = level
-
-            return True
-
-        except Exception as e:
-            print(f"  Warning: Error checking heading structure: {e}")
-            return False
-
-    def _is_reading_order_correct(self) -> bool:
-        """
-        Check if reading order is already properly configured.
-
-        Returns:
-            True if reading order is properly set
-        """
-        try:
-            # Check all pages for proper reading order configuration
-            for page in self.pdf.pages:
-                # Check if Tabs is set to follow structure
-                tabs = page.get('/Tabs')
-                if tabs != Name('/S'):
-                    return False
-
-                # Check if StructParents is configured
-                if '/StructParents' not in page:
-                    return False
-
-            return True
-
-        except Exception as e:
-            print(f"  Warning: Error checking reading order: {e}")
-            return False
-
-    def _validate_tag_type(self, elem, content_type: str) -> bool:
-        """
-        Validate that structure element type matches expected content type.
-
-        Args:
-            elem: Structure element to validate
-            content_type: Expected content type ('image', 'table', 'heading', 'form', etc.)
-
-        Returns:
-            True if tag type matches content, False otherwise
-        """
-        try:
-            if not (isinstance(elem, dict) or hasattr(elem, 'get')):
-                return False
-
-            struct_type = str(elem.get('/S', ''))
-
-            # Map content types to expected structure types
-            type_map = {
-                'image': ['/Figure', 'Figure', Name('/Figure')],
-                'table': ['/Table', 'Table', Name('/Table')],
-                'heading': ['/H1', '/H2', '/H3', '/H4', '/H5', '/H6',
-                          'H1', 'H2', 'H3', 'H4', 'H5', 'H6',
-                          Name('/H1'), Name('/H2'), Name('/H3'),
-                          Name('/H4'), Name('/H5'), Name('/H6')],
-                'form': ['/Form', 'Form', Name('/Form')],
-                'annotation': ['/Note', '/Annot', '/Stamp', 'Note', 'Annot', 'Stamp',
-                             Name('/Note'), Name('/Annot'), Name('/Stamp')],
-                'artifact': ['/Artifact', 'Artifact', Name('/Artifact')],
-                'paragraph': ['/P', 'P', Name('/P')],
-                'list': ['/L', '/LI', 'L', 'LI', Name('/L'), Name('/LI')]
-            }
-
-            expected = type_map.get(content_type, [])
-            return struct_type in expected or any(str(exp) == struct_type for exp in expected)
-
-        except Exception as e:
-            print(f"  Warning: Error validating tag type: {e}")
-            return False
-
-    def _remove_incorrect_tag(self, elem) -> bool:
-        """
-        Remove incorrectly placed structure element from the structure tree.
-
-        Args:
-            elem: Structure element to remove
-
-        Returns:
-            True if successfully removed, False otherwise
-        """
-        try:
-            if '/StructTreeRoot' not in self.pdf.Root:
-                return False
-
-            struct_tree = self.pdf.Root.StructTreeRoot
-            if '/K' not in struct_tree or not struct_tree.K:
-                return False
-
-            struct_elements = struct_tree.K
-
-            # Remove element from structure elements array
-            if elem in struct_elements:
-                # Convert to list for modification
-                elements_list = list(struct_elements)
-                elements_list.remove(elem)
-                struct_tree['/K'] = Array(elements_list)
-                return True
-
-            return False
-
-        except Exception as e:
-            print(f"  Warning: Error removing incorrect tag: {e}")
-            return False
-
-    def _fix_incorrect_tag_type(self, elem, correct_type: str, title: str = "", alt_text: str = "") -> bool:
-        """
-        Replace incorrect structure element type with correct one.
-
-        Args:
-            elem: Structure element with wrong type
-            correct_type: Correct structure type (e.g., '/Figure', '/Table')
-            title: Optional title for new element
-            alt_text: Optional alt text for new element
-
-        Returns:
-            True if successfully fixed, False otherwise
-        """
-        try:
-            # Update the structure type in place
-            elem['/S'] = Name(correct_type if correct_type.startswith('/') else f'/{correct_type}')
-
-            # Update title if provided
-            if title:
-                elem['/T'] = String(title)
-
-            # Update alt text if provided
-            if alt_text:
-                elem['/Alt'] = String(alt_text)
-
-            return True
-
-        except Exception as e:
-            print(f"  Warning: Error fixing incorrect tag type: {e}")
-            return False
-
-    def _fix_heading_hierarchy(self) -> int:
-        """
-        Fix incorrect heading hierarchy by reordering and filling gaps.
-        Corrects issues like H1→H3 (skipped H2) to H1→H2→H3.
-
-        Returns:
-            Number of heading hierarchy issues fixed
-        """
-        try:
-            if '/StructTreeRoot' not in self.pdf.Root:
-                return 0
-
-            struct_tree = self.pdf.Root.StructTreeRoot
-            if '/K' not in struct_tree or not struct_tree.K:
-                return 0
-
-            struct_elements = struct_tree.K
-            fixed_count = 0
-
-            # Collect all heading elements with their levels and positions
-            headings = []
-            for idx, elem in enumerate(struct_elements):
-                try:
-                    if not (isinstance(elem, dict) or hasattr(elem, 'get')):
-                        continue
-
-                    struct_type = str(elem.get('/S', ''))
-
-                    # Check if it's a heading (H1-H6)
-                    if struct_type.startswith('/H') or struct_type.startswith('H'):
-                        level_str = struct_type.replace('/H', '').replace('H', '')
-                        try:
-                            level = int(level_str)
-                            if 1 <= level <= 6:
-                                headings.append({
-                                    'level': level,
-                                    'index': idx,
-                                    'elem': elem
-                                })
-                        except ValueError:
-                            continue
-
-                except Exception:
-                    continue
-
-            if not headings:
-                return 0
-
-            # Check if first heading is not H1
-            if headings[0]['level'] != 1:
-                print(f"  ⚠️ Fixing heading hierarchy: First heading is H{headings[0]['level']}, changing to H1")
-                headings[0]['elem']['/S'] = Name('/H1')
-                headings[0]['level'] = 1
-                fixed_count += 1
-
-            # Check for skipped levels and fix them
-            prev_level = 0
-            for i, heading in enumerate(headings):
-                current_level = heading['level']
-
-                if current_level > prev_level + 1 and prev_level > 0:
-                    # Skipped level detected - adjust current heading down
-                    correct_level = prev_level + 1
-                    print(f"  ⚠️ Fixing heading hierarchy: H{prev_level}→H{current_level} (skipped level), changing H{current_level} to H{correct_level}")
-                    heading['elem']['/S'] = Name(f'/H{correct_level}')
-                    heading['level'] = correct_level
-                    headings[i]['level'] = correct_level
-                    fixed_count += 1
-
-                prev_level = heading['level']
-
-            if fixed_count > 0:
-                print(f"  ✓ Fixed {fixed_count} heading hierarchy issues")
-
-            return fixed_count
-
-        except Exception as e:
-            print(f"  Warning: Error fixing heading hierarchy: {e}")
-            return 0
-
-    def _validate_and_fix_tag_types(self) -> int:
-        """
-        Validate all structure elements and fix incorrect tag types.
-        Checks that images are tagged as /Figure, tables as /Table, etc.
-
-        Returns:
-            Number of tag type corrections made
-        """
-        try:
-            if '/StructTreeRoot' not in self.pdf.Root:
-                return 0
-
-            struct_tree = self.pdf.Root.StructTreeRoot
-            if '/K' not in struct_tree or not struct_tree.K:
-                return 0
-
-            struct_elements = struct_tree.K
-            fixed_count = 0
-
-            for elem in struct_elements:
-                try:
-                    if not (isinstance(elem, dict) or hasattr(elem, 'get')):
-                        continue
-
-                    struct_type = str(elem.get('/S', ''))
-                    title = str(elem.get('/T', ''))
-
-                    # Check if element is incorrectly typed
-                    # Look for clues in title to determine correct type
-
-                    # Image tagged as wrong type
-                    if ('image' in title.lower() or 'figure' in title.lower() or
-                        'photo' in title.lower() or 'graphic' in title.lower()):
-                        if not self._validate_tag_type(elem, 'image'):
-                            print(f"  ⚠️ Fixing incorrect tag: '{title}' tagged as {struct_type}, should be /Figure")
-                            if self._fix_incorrect_tag_type(elem, '/Figure', title):
-                                fixed_count += 1
-
-                    # Table tagged as wrong type
-                    elif ('table' in title.lower() or 'grid' in title.lower()):
-                        if not self._validate_tag_type(elem, 'table'):
-                            print(f"  ⚠️ Fixing incorrect tag: '{title}' tagged as {struct_type}, should be /Table")
-                            if self._fix_incorrect_tag_type(elem, '/Table', title):
-                                fixed_count += 1
-
-                    # Form field tagged as wrong type
-                    elif ('field' in title.lower() or 'form' in title.lower() or
-                          'input' in title.lower() or 'button' in title.lower()):
-                        if not self._validate_tag_type(elem, 'form'):
-                            print(f"  ⚠️ Fixing incorrect tag: '{title}' tagged as {struct_type}, should be /Form")
-                            if self._fix_incorrect_tag_type(elem, '/Form', title):
-                                fixed_count += 1
-
-                except Exception:
-                    continue
-
-            if fixed_count > 0:
-                print(f"  ✓ Fixed {fixed_count} incorrect tag types")
-
-            return fixed_count
-
-        except Exception as e:
-            print(f"  Warning: Error validating and fixing tag types: {e}")
-            return 0
-
     def mark_unmarked_content_as_artifacts(self) -> int:
         """
         Ensure all content in the document is either included in the Tags tree or marked as an artifact.
@@ -1323,13 +861,6 @@ class EnhancedPDFRemediator:
                     if not img_info:
                         continue
 
-                    # Check if image is already properly tagged with good alt-text
-                    is_tagged, existing_alt = self._is_image_already_properly_tagged(img_info.name, page_num)
-                    if is_tagged and existing_alt:
-                        print(f"  ✓ Skipping image '{img_info.name}' on page {page_num}: already properly tagged")
-                        print(f"    Existing alt-text: \"{existing_alt[:80]}{'...' if len(existing_alt) > 80 else ''}\"")
-                        continue
-
                     # Get image bounding box (approximate)
                     width = obj.get('/Width', 0)
                     height = obj.get('/Height', 0)
@@ -1439,7 +970,6 @@ class EnhancedPDFRemediator:
     def tag_headings(self, heading_map: Dict[int, str] = None) -> int:
         """
         Tag headings based on font size and formatting.
-        Skips tagging if heading hierarchy is already properly ordered.
 
         Args:
             heading_map: Optional mapping of page numbers to heading text
@@ -1447,11 +977,6 @@ class EnhancedPDFRemediator:
         tagged_count = 0
 
         try:
-            # Check if heading structure is already valid
-            if self._is_heading_structure_valid():
-                print("  ✓ Skipping heading tagging: heading hierarchy is already properly ordered")
-                return 0
-
             # This is a simplified implementation
             # Full heading detection would require content stream parsing
 
@@ -1490,7 +1015,6 @@ class EnhancedPDFRemediator:
     def tag_tables(self) -> int:
         """
         Tag tables with proper structure (headers, summaries).
-        Skips tables that are already properly tagged with headers.
         """
         if not self.tables:
             self.analyze_tables()
@@ -1502,11 +1026,6 @@ class EnhancedPDFRemediator:
             struct_elements = struct_tree.K
 
             for table in self.tables:
-                # Check if table is already properly tagged with headers
-                if self._is_table_already_properly_tagged(table.page_number):
-                    print(f"  ✓ Skipping table on page {table.page_number}: already properly tagged with headers")
-                    continue
-
                 # Create table structure element
                 table_elem = self.pdf.make_indirect(Dictionary({
                     '/Type': Name('/StructElem'),
@@ -1785,17 +1304,8 @@ class EnhancedPDFRemediator:
         return f"Link to {domain}"
 
     def set_reading_order(self) -> bool:
-        """
-        Set proper reading order for screen readers.
-        Skips if reading order is already correctly configured.
-        """
+        """Set proper reading order for screen readers."""
         try:
-            # Check if reading order is already correct
-            if self._is_reading_order_correct():
-                print("  ✓ Skipping reading order: already properly configured")
-                return False  # Return False since nothing was changed
-
-            # Set reading order for each page
             for page_num, page in enumerate(self.pdf.pages, 1):
                 # Set structure parent index
                 if '/StructParents' not in page:
@@ -1874,9 +1384,6 @@ class EnhancedPDFRemediator:
 
         # Check reading order (WCAG 1.3.2)
         issues.extend(self._check_reading_order())
-
-        # Check if PDF requires OCR
-        issues.extend(self._check_ocr_requirement())
 
         self.report.issues_found = issues
         return issues
@@ -2127,108 +1634,6 @@ class EnhancedPDFRemediator:
             pass
         return issues
 
-    def _check_ocr_requirement(self) -> List[AccessibilityIssue]:
-        """
-        Detect if PDF is graphically-rendered and requires OCR for proper text extraction.
-        This checks for CID-encoded fonts and large background images that indicate
-        the PDF was created by rendering text as graphics rather than embedding searchable text.
-        """
-        issues = []
-
-        try:
-            # Check first few pages for CID-encoded text
-            cid_pages = 0
-            large_image_pages = 0
-            pages_checked = min(3, len(self.pdf.pages))  # Check first 3 pages
-
-            for page_num, page in enumerate(self.pdf.pages[:pages_checked], 1):
-                # Check for CID-encoded fonts in text streams
-                has_cid_font = False
-                try:
-                    if '/Contents' in page:
-                        contents = page.Contents
-                        if hasattr(contents, 'read_bytes'):
-                            content_bytes = contents.read_bytes()
-                            # Look for CID font markers and hex-encoded text sequences
-                            # Hex sequences like \x00\x02\x03 indicate CID-encoded glyphs
-                            hex_sequences = 0
-                            for i in range(len(content_bytes) - 10):
-                                # Check for patterns like \x00\x02\x03\x04 (4+ sequential low bytes)
-                                if (content_bytes[i] < 32 and content_bytes[i+1] < 32 and
-                                    content_bytes[i+2] < 32 and content_bytes[i+3] < 32):
-                                    hex_sequences += 1
-                                    if hex_sequences > 10:  # Multiple occurrences suggest CID encoding
-                                        has_cid_font = True
-                                        cid_pages += 1
-                                        break
-
-                            # Also check for explicit CID font declarations
-                            if not has_cid_font and (b'/CIDFont' in content_bytes or b'(cid:' in content_bytes.lower()):
-                                has_cid_font = True
-                                cid_pages += 1
-                except:
-                    pass
-
-                # Check for very large background images (likely full-page renders)
-                if '/Resources' in page and '/XObject' in page.Resources:
-                    for name, obj in page.Resources.XObject.items():
-                        try:
-                            if '/Subtype' in obj and obj.Subtype == '/Image':
-                                width = int(obj.get('/Width', 0))
-                                height = int(obj.get('/Height', 0))
-
-                                # Large images (>1500px) on pages suggest graphical rendering
-                                if width > 1500 or height > 1500:
-                                    large_image_pages += 1
-                                    break
-                        except:
-                            pass
-
-            # If document has both CID fonts AND large background images, likely needs OCR
-            # Even a single page with both indicators suggests graphical rendering
-            if (cid_pages > 0 and large_image_pages > 0) or cid_pages >= 2 or large_image_pages >= 2:
-                issues.append(AccessibilityIssue(
-                    category="Document Structure",
-                    severity="critical",
-                    description=(
-                        f"PDF appears to be graphically-rendered (detected {cid_pages} pages with CID fonts, "
-                        f"{large_image_pages} pages with large background images). "
-                        "Text content cannot be properly extracted or tagged without OCR. "
-                        "Consider using OCR software (Adobe Acrobat Pro, Tesseract, ABBYY FineReader) "
-                        "to convert this PDF to searchable text before remediation."
-                    ),
-                    wcag_criterion="1.3.1 Info and Relationships"
-                ))
-
-                # Print warning to console for immediate visibility
-                print("\n" + "="*70)
-                print("⚠️  WARNING: PDF REQUIRES OCR")
-                print("="*70)
-                print(f"This PDF appears to be graphically-rendered:")
-                print(f"  • Pages with CID-encoded fonts: {cid_pages}/{pages_checked}")
-                print(f"  • Pages with large background images: {large_image_pages}/{pages_checked}")
-                print()
-                print("This tool can mark structural elements but CANNOT extract text content")
-                print("from graphically-rendered PDFs.")
-                print()
-                print("RECOMMENDATION:")
-                print("  1. Use OCR software to convert this PDF to searchable text:")
-                print("     - Adobe Acrobat Pro: Tools → Enhance Scans → Recognize Text")
-                print("     - Tesseract OCR: tesseract input.pdf output pdf")
-                print("     - ABBYY FineReader")
-                print("     - Online services: ocr.space, Adobe online OCR")
-                print()
-                print("  2. Re-run this remediation tool on the OCR'd version")
-                print()
-                print("The current remediation will proceed but may produce limited results.")
-                print("="*70 + "\n")
-
-        except Exception as e:
-            # Don't fail remediation if OCR detection fails
-            print(f"Note: Could not check for OCR requirement: {e}")
-
-        return issues
-
     def remediate(self, options: Dict = None) -> int:
         """
         Comprehensive PDF remediation.
@@ -2293,16 +1698,6 @@ class EnhancedPDFRemediator:
         # 9.5. Mark unmarked content as artifacts
         print("Marking unmarked content as artifacts...")
         if self.mark_unmarked_content_as_artifacts() > 0:
-            fixed_count += 1
-
-        # 9.6. Validate and fix incorrect tag types
-        print("Validating and fixing tag types...")
-        if self._validate_and_fix_tag_types() > 0:
-            fixed_count += 1
-
-        # 9.7. Fix heading hierarchy issues
-        print("Fixing heading hierarchy...")
-        if self._fix_heading_hierarchy() > 0:
             fixed_count += 1
 
         # 10. Fix links
@@ -2590,7 +1985,13 @@ class EnhancedPDFRemediator:
         lines.append("-" * 70)
         lines.append(f"Total Issues Found:     {len(self.report.issues_found)}")
         lines.append(f"Issues Fixed:           {len(self.report.issues_fixed)}")
-        lines.append(f"Remaining Issues:       {len(self.report.issues_found) - len(self.report.issues_fixed)}")
+
+        # Calculate remaining issues more accurately
+        remaining_count = len([i for i in self.report.issues_found if not any(
+            f.category == i.category and f.description == i.description
+            for f in self.report.issues_fixed
+        )])
+        lines.append(f"Remaining Issues:       {remaining_count}")
         lines.append("")
 
         # Issues by severity
