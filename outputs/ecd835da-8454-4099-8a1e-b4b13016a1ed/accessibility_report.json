@@ -1,0 +1,83 @@
+{
+  "timestamp": "2025-12-11 10:22:21",
+  "compliance_score": 91,
+  "passes_wcag": true,
+  "total_checks": 12,
+  "passed_count": 11,
+  "issues_count": 0,
+  "warnings_count": 1,
+  "issues": [],
+  "warnings": [
+    {
+      "guideline": "1.3.1",
+      "guideline_name": "Info and Relationships (Level A)",
+      "title": "Limited Semantic Structure",
+      "description": "The document uses few or no semantic HTML5 elements.",
+      "remediation": "Use semantic HTML5 elements like <header>, <nav>, <main>, <article>, <section>, <aside>, and <footer> to structure your content.",
+      "severity": "warning",
+      "level": "A"
+    }
+  ],
+  "passed_checks": [
+    {
+      "guideline": "2.4.2",
+      "guideline_name": "Page Titled (Level A)",
+      "title": "Page has a meaningful title"
+    },
+    {
+      "guideline": "3.1.1",
+      "guideline_name": "Language of Page (Level A)",
+      "title": "Document language declared as \"en\""
+    },
+    {
+      "guideline": "2.4.6",
+      "guideline_name": "Headings and Labels (Level AA)",
+      "title": "Heading hierarchy is logical (no skipped levels)"
+    },
+    {
+      "guideline": "2.4.6",
+      "guideline_name": "Headings and Labels (Level AA)",
+      "title": "All headings contain text"
+    },
+    {
+      "guideline": "1.1.1",
+      "guideline_name": "Non-text Content (Level A)",
+      "title": "No images found"
+    },
+    {
+      "guideline": "2.4.4",
+      "guideline_name": "Link Purpose (In Context) (Level A)",
+      "title": "All 1 links have descriptive text"
+    },
+    {
+      "guideline": "1.3.1",
+      "guideline_name": "Info and Relationships (Level A)",
+      "title": "All 2 tables are properly structured"
+    },
+    {
+      "guideline": "4.1.2",
+      "guideline_name": "Name, Role, Value (Level A)",
+      "title": "No form elements found"
+    },
+    {
+      "guideline": "2.4.1",
+      "guideline_name": "Bypass Blocks (Level A)",
+      "title": "Skip navigation link present"
+    },
+    {
+      "guideline": "1.3.1",
+      "guideline_name": "Info and Relationships (Level A)",
+      "title": "Main landmark properly defined"
+    },
+    {
+      "guideline": "1.4.3",
+      "guideline_name": "Contrast (Minimum) (Level AA)",
+      "title": "No obvious color contrast issues detected"
+    }
+  ],
+  "summary": {
+    "status": "pass",
+    "message": "Congratulations! Your document meets WCAG 2.2 Level AA requirements.",
+    "recommendation": "Continue to maintain accessibility standards in future updates."
+  }
+}

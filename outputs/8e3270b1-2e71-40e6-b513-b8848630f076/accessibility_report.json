@@ -1,0 +1,85 @@
+{
+  "timestamp": "2026-01-13 16:30:53",
+  "compliance_score": 81,
+  "passes_wcag": false,
+  "total_checks": 11,
+  "passed_count": 9,
+  "issues_count": 1,
+  "warnings_count": 1,
+  "issues": [
+    {
+      "guideline": "2.4.6",
+      "guideline_name": "Headings and Labels (Level AA)",
+      "title": "No Headings Found",
+      "description": "The document does not contain any headings.",
+      "remediation": "Add headings (h1-h6) to structure your content hierarchically. Start with an h1 for the main title.\n                <br><br><strong>\ud83d\udcda Learn How to Fix:</strong><br>\n                \u2022 <a href=\"https://helpx.adobe.com/acrobat/using/editing-document-structure-content-tags.html#add_headings_to_a_pdf\" target=\"_blank\">Adobe Acrobat: Add Headings to PDF</a><br>\n                \u2022 <a href=\"https://support.equidox.co/hc/en-us/articles/360016896372-Headings\" target=\"_blank\">Equidox: Creating Headings</a>",
+      "severity": "error",
+      "level": "AA",
+      "type": "missing_headings"
+    }
+  ],
+  "warnings": [
+    {
+      "guideline": "1.3.1",
+      "guideline_name": "Info and Relationships (Level A)",
+      "title": "Limited Semantic Structure",
+      "description": "The document uses few or no semantic HTML5 elements.",
+      "remediation": "Use semantic HTML5 elements like <header>, <nav>, <main>, <article>, <section>, <aside>, and <footer> to structure your content.\n                <br><br><strong>\ud83d\udcda Learn How to Fix:</strong><br>\n                \u2022 <a href=\"https://helpx.adobe.com/acrobat/using/editing-document-structure-content-tags.html\" target=\"_blank\">Adobe Acrobat: Document Structure and Tags</a><br>\n                \u2022 <a href=\"https://support.equidox.co/hc/en-us/articles/360016896352-Reading-Order\" target=\"_blank\">Equidox: Reading Order</a>",
+      "severity": "warning",
+      "level": "A",
+      "type": "unknown"
+    }
+  ],
+  "passed_checks": [
+    {
+      "guideline": "2.4.2",
+      "guideline_name": "Page Titled (Level A)",
+      "title": "Page has a meaningful title"
+    },
+    {
+      "guideline": "3.1.1",
+      "guideline_name": "Language of Page (Level A)",
+      "title": "Document language declared as \"en\""
+    },
+    {
+      "guideline": "1.1.1",
+      "guideline_name": "Non-text Content (Level A)",
+      "title": "No images found"
+    },
+    {
+      "guideline": "2.4.4",
+      "guideline_name": "Link Purpose (In Context) (Level A)",
+      "title": "All 1 links have descriptive text"
+    },
+    {
+      "guideline": "1.3.1",
+      "guideline_name": "Info and Relationships (Level A)",
+      "title": "All 2 tables are properly structured"
+    },
+    {
+      "guideline": "4.1.2",
+      "guideline_name": "Name, Role, Value (Level A)",
+      "title": "No form elements found"
+    },
+    {
+      "guideline": "2.4.1",
+      "guideline_name": "Bypass Blocks (Level A)",
+      "title": "Skip navigation link present"
+    },
+    {
+      "guideline": "1.3.1",
+      "guideline_name": "Info and Relationships (Level A)",
+      "title": "Main landmark properly defined"
+    },
+    {
+      "guideline": "1.4.3",
+      "guideline_name": "Contrast (Minimum) (Level AA)",
+      "title": "No obvious color contrast issues detected"
+    }
+  ],
+  "summary": {
+    "status": "near_pass",
+    "message": "Your document is close to meeting WCAG 2.2 Level AA requirements.",
+    "recommendation": "Address the critical issues listed below to achieve full compliance."
+  }
+}

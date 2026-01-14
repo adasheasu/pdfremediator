@@ -1,0 +1,95 @@
+{
+  "timestamp": "2026-01-13 17:34:41",
+  "compliance_score": 63,
+  "passes_wcag": false,
+  "total_checks": 11,
+  "passed_count": 7,
+  "issues_count": 2,
+  "warnings_count": 2,
+  "issues": [
+    {
+      "guideline": "2.4.6",
+      "guideline_name": "Headings and Labels (Level AA)",
+      "title": "No Headings Found",
+      "description": "The document does not contain any headings.",
+      "remediation": "Add headings (h1-h6) to structure your content hierarchically. Start with an h1 for the main title.\n                <br><br><strong>\ud83d\udcda Learn How to Fix:</strong><br>\n                \u2022 <a href=\"https://helpx.adobe.com/acrobat/using/editing-document-structure-content-tags.html#add_headings_to_a_pdf\" target=\"_blank\">Adobe Acrobat: Add Headings to PDF</a><br>",
+      "severity": "error",
+      "level": "AA",
+      "type": "missing_headings"
+    },
+    {
+      "guideline": "1.3.1",
+      "guideline_name": "Info and Relationships (Level A)",
+      "title": "Table Accessibility Issues",
+      "description": "Found issues in 2 table(s).",
+      "remediation": "Add captions to tables, use th elements for headers with scope attributes, and add role=\"table\" for ARIA support.\n                <br><br><strong>\ud83d\udcda Learn How to Fix:</strong><br>\n                \u2022 <a href=\"https://helpx.adobe.com/acrobat/using/editing-document-structure-content-tags.html#edit_table_tags\" target=\"_blank\">Adobe Acrobat: Edit Table Tags</a><br>",
+      "severity": "error",
+      "level": "A",
+      "type": "table_accessibility"
+    }
+  ],
+  "warnings": [
+    {
+      "guideline": "1.3.1",
+      "guideline_name": "Info and Relationships (Level A)",
+      "title": "Main Element Missing Role",
+      "description": "The <main> element does not have role=\"main\".",
+      "remediation": "Add role=\"main\" to the <main> element.\n                    <br><br><strong>\ud83d\udcda Learn How to Fix:</strong><br>\n                    \u2022 <a href=\"https://helpx.adobe.com/acrobat/using/editing-document-structure-content-tags.html\" target=\"_blank\">Adobe Acrobat: Document Structure and Tags</a><br>",
+      "severity": "warning",
+      "level": "A",
+      "type": "unknown"
+    },
+    {
+      "guideline": "1.3.1",
+      "guideline_name": "Info and Relationships (Level A)",
+      "title": "Limited Semantic Structure",
+      "description": "The document uses few or no semantic HTML5 elements.",
+      "remediation": "Use semantic HTML5 elements like <header>, <nav>, <main>, <article>, <section>, <aside>, and <footer> to structure your content.\n                <br><br><strong>\ud83d\udcda Learn How to Fix:</strong><br>\n                \u2022 <a href=\"https://helpx.adobe.com/acrobat/using/editing-document-structure-content-tags.html\" target=\"_blank\">Adobe Acrobat: Document Structure and Tags</a><br>",
+      "severity": "warning",
+      "level": "A",
+      "type": "unknown"
+    }
+  ],
+  "passed_checks": [
+    {
+      "guideline": "2.4.2",
+      "guideline_name": "Page Titled (Level A)",
+      "title": "Page has a meaningful title"
+    },
+    {
+      "guideline": "3.1.1",
+      "guideline_name": "Language of Page (Level A)",
+      "title": "Document language declared as \"en\""
+    },
+    {
+      "guideline": "1.1.1",
+      "guideline_name": "Non-text Content (Level A)",
+      "title": "No images found"
+    },
+    {
+      "guideline": "2.4.4",
+      "guideline_name": "Link Purpose (In Context) (Level A)",
+      "title": "All 1 links have descriptive text"
+    },
+    {
+      "guideline": "4.1.2",
+      "guideline_name": "Name, Role, Value (Level A)",
+      "title": "No form elements found"
+    },
+    {
+      "guideline": "2.4.1",
+      "guideline_name": "Bypass Blocks (Level A)",
+      "title": "Skip navigation link present"
+    },
+    {
+      "guideline": "1.4.3",
+      "guideline_name": "Contrast (Minimum) (Level AA)",
+      "title": "No obvious color contrast issues detected"
+    }
+  ],
+  "summary": {
+    "status": "needs_work",
+    "message": "Your document has significant accessibility issues that need attention.",
+    "recommendation": "Review and address all critical issues to improve accessibility."
+  }
+}

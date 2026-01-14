@@ -1,0 +1,7 @@
+Flask==3.0.0
+pdfplumber==0.11.0
+beautifulsoup4==4.12.2
+xhtml2pdf==0.2.15
+Werkzeug==3.0.1
+Pillow==10.1.0
+html5lib==1.1

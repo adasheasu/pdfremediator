@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASU PDF Remediation Tool - WCAG 2.2 AA Compliance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #8C1D40 0%, #FFC627 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+
+        .features {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .features h2 {
+            color: #2c3e50;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .features ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .features li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .upload-section {
+            border: 3px dashed #bdc3c7;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .upload-section:hover {
+            border-color: #8C1D40;
+            background: #fff5e6;
+        }
+
+        .upload-section.dragover {
+            border-color: #8C1D40;
+            background: #fff5e6;
+            transform: scale(1.02);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            font-size: 1em;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+        }
+
+        .btn:focus {
+            outline: 3px solid #8C1D40;
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8C1D40 0%, #FFC627 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(140, 29, 64, 0.4);
+        }
+
+        .btn-secondary {
+            background: #27ae60;
+            color: white;
+            margin: 5px;
+        }
+
+        .btn-secondary:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-info {
+            background: #2196f3;
+            color: white;
+            margin: 5px;
+        }
+
+        .btn-info:hover {
+            background: #1976d2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #fileName {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .progress-container {
+            display: none;
+            margin: 30px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #ecf0f1;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8C1D40 0%, #FFC627 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .status-message {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.1em;
+            color: #2c3e50;
+        }
+
+        .results-section {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: #e8f5e9;
+            border-radius: 12px;
+            border-left: 5px solid #27ae60;
+        }
+
+        .results-section h2 {
+            color: #27ae60;
+            margin-bottom: 20px;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 5px solid #c62828;
+            display: none;
+        }
+
+        .info-section {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+
+        .info-section h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .info-section p {
+            color: #424242;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .upload-section {
+                padding: 20px;
+            }
+
+            .download-buttons {
+                flex-direction: column;
+            }
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #8C1D40;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .report-section {
+            background: #fff8e1;
+            border-left: 5px solid #ff9800;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .report-section.pass {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+
+        .report-section h3 {
+            color: #f57c00;
+            margin-bottom: 10px;
+        }
+
+        .report-section.pass h3 {
+            color: #2e7d32;
+        }
+
+        .report-stats {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .report-stat {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .report-stat .number {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .report-stat.error .number {
+            color: #d32f2f;
+        }
+
+        .report-stat.warning .number {
+            color: #f57c00;
+        }
+
+        .report-stat.pass .number {
+            color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📄 ASU PDF Remediation Tool</h1>
+            <p class="subtitle">Arizona State University | Convert, Remediate, and Export Accessible Documents</p>
+            <span class="badge">WCAG 2.2 AA Compliant</span>
+        </header>
+
+        <section class="features">
+            <h2>What This Tool Does:</h2>
+            <ul>
+                <li>Converts PDF documents to structured HTML</li>
+                <li>Remediates HTML for WCAG 2.2 AA accessibility compliance</li>
+                <li>Adds proper semantic structure (headings, tables, landmarks)</li>
+                <li>Ensures keyboard navigation and screen reader compatibility</li>
+                <li>Provides sufficient color contrast and readable text</li>
+                <li>Generates accessible tables with proper headers</li>
+                <li>Converts remediated HTML back to PDF</li>
+                <li>Download both HTML and PDF versions</li>
+            </ul>
+        </section>
+
+        <main>
+            <section class="upload-section" id="uploadSection">
+                <h2>Upload Your PDF</h2>
+                <p style="margin: 20px 0; color: #7f8c8d;">Drag and drop a PDF file here, or click to select</p>
+
+                <div class="file-input-wrapper">
+                    <label for="fileInput" class="btn btn-primary">
+                        Choose PDF File
+                    </label>
+                    <input type="file" id="fileInput" accept=".pdf" aria-label="Choose PDF file for remediation">
+                </div>
+
+                <div id="fileName"></div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-primary" id="remediateBtn" style="display: none;">
+                        🔧 Remediate Document
+                    </button>
+                </div>
+            </section>
+
+            <div class="error-message" id="errorMessage" role="alert"></div>
+
+            <div class="progress-container" id="progressContainer">
+                <div class="spinner" id="spinner"></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill">0%</div>
+                </div>
+                <div class="status-message" id="statusMessage">Processing your document...</div>
+            </div>
+
+            <section class="results-section" id="resultsSection">
+                <h2>✅ Remediation Complete!</h2>
+                <p style="margin-bottom: 20px;">Your document has been successfully processed and is ready for download.</p>
+
+                <div class="report-section" id="reportSection">
+                    <h3 id="reportTitle">📊 Accessibility Report</h3>
+                    <p id="reportSummary"></p>
+
+                    <div class="report-stats" id="reportStats"></div>
+
+                    <div class="download-buttons" style="margin-top: 15px;">
+                        <button class="btn btn-secondary" id="viewFullReport" style="display: none;">
+                            📋 View Full Report
+                        </button>
+                        <button class="btn btn-secondary" id="downloadReport" style="display: none;">
+                            📥 Download Report (TXT)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="download-buttons">
+                    <button class="btn btn-secondary" id="downloadHtml" aria-label="Download remediated HTML file">
+                        📥 Download HTML
+                    </button>
+                    <button class="btn btn-secondary" id="downloadPdf" aria-label="Download remediated PDF file">
+                        📥 Download PDF
+                    </button>
+                    <button class="btn btn-info" id="interactiveRemediate" aria-label="Interactive remediation wizard" style="display: none;">
+                        🔧 Interactive Remediation
+                    </button>
+                    <button class="btn btn-primary" id="processAnother">
+                        🔄 Process Another Document
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <section class="info-section">
+            <h3>About WCAG 2.2 AA Compliance</h3>
+            <p>
+                This tool automatically applies Web Content Accessibility Guidelines (WCAG) 2.2 Level AA standards to your documents.
+                This includes proper document structure, semantic HTML, keyboard navigation, screen reader compatibility,
+                sufficient color contrast, and accessible tables and forms. The resulting documents are more usable for
+                people with disabilities and improve the overall user experience for everyone.
+            </p>
+        </section>
+    </div>
+
+    <script>
+        let currentSessionId = null;
+        let selectedFile = null;
+        const fileInput = document.getElementById('fileInput');
+        const uploadSection = document.getElementById('uploadSection');
+        const fileName = document.getElementById('fileName');
+        const remediateBtn = document.getElementById('remediateBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const statusMessage = document.getElementById('statusMessage');
+        const resultsSection = document.getElementById('resultsSection');
+        const errorMessage = document.getElementById('errorMessage');
+        const spinner = document.getElementById('spinner');
+        const downloadHtml = document.getElementById('downloadHtml');
+        const downloadPdf = document.getElementById('downloadPdf');
+        const processAnother = document.getElementById('processAnother');
+
+        // File input change handler
+        fileInput.addEventListener('change', handleFileSelect);
+
+        // Drag and drop handlers
+        uploadSection.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadSection.classList.add('dragover');
+        });
+
+        uploadSection.addEventListener('dragleave', () => {
+            uploadSection.classList.remove('dragover');
+        });
+
+        uploadSection.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadSection.classList.remove('dragover');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFileSelect();
+            }
+        });
+
+        function handleFileSelect() {
+            const file = fileInput.files[0];
+
+            if (!file) {
+                return;
+            }
+
+            if (!file.name.toLowerCase().endsWith('.pdf')) {
+                showError('Please select a PDF file.');
+                return;
+            }
+
+            selectedFile = file;
+            fileName.textContent = `📄 Selected: ${file.name}`;
+            fileName.style.fontWeight = 'bold';
+            fileName.style.color = '#8C1D40';
+            fileName.style.marginTop = '10px';
+
+            // Show the remediate button
+            remediateBtn.style.display = 'inline-block';
+
+            // Clear any previous errors
+            errorMessage.style.display = 'none';
+        }
+
+        // Remediate button click handler
+        remediateBtn.addEventListener('click', () => {
+            if (selectedFile) {
+                uploadFile(selectedFile);
+            }
+        });
+
+        async function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Show progress
+            errorMessage.style.display = 'none';
+            progressContainer.style.display = 'block';
+            resultsSection.style.display = 'none';
+            spinner.style.display = 'block';
+            progressFill.style.width = '30%';
+            progressFill.textContent = '30%';
+            statusMessage.textContent = 'Uploading and converting PDF to HTML...';
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Upload failed');
+                }
+
+                // Update progress
+                progressFill.style.width = '60%';
+                progressFill.textContent = '60%';
+                statusMessage.textContent = 'Remediating HTML for accessibility...';
+
+                // Simulate processing time
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                progressFill.style.width = '90%';
+                progressFill.textContent = '90%';
+                statusMessage.textContent = 'Converting to PDF...';
+
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                // Complete
+                progressFill.style.width = '100%';
+                progressFill.textContent = '100%';
+                statusMessage.textContent = 'Complete!';
+                spinner.style.display = 'none';
+
+                currentSessionId = data.session_id;
+
+                // Display accessibility report if available
+                if (data.accessibility_report) {
+                    displayAccessibilityReport(data.accessibility_report, data.session_id, data.has_issues);
+                }
+
+                // Show results after a brief delay
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                    resultsSection.style.display = 'block';
+                }, 500);
+
+            } catch (error) {
+                showError(error.message);
+                progressContainer.style.display = 'none';
+                spinner.style.display = 'none';
+            }
+        }
+
+        function displayAccessibilityReport(report, sessionId, hasIssues) {
+            const reportSection = document.getElementById('reportSection');
+            const reportTitle = document.getElementById('reportTitle');
+            const reportSummary = document.getElementById('reportSummary');
+            const reportStats = document.getElementById('reportStats');
+            const viewFullReport = document.getElementById('viewFullReport');
+            const downloadReport = document.getElementById('downloadReport');
+
+            // Show report section
+            reportSection.style.display = 'block';
+
+            // Update styling based on pass/fail
+            if (!hasIssues) {
+                reportSection.classList.add('pass');
+                reportTitle.textContent = '✅ Accessibility Report - Passed!';
+                reportSummary.textContent = `Excellent! Your document passed all WCAG 2.2 AA accessibility checks with a score of ${report.compliance_score}%.`;
+            } else {
+                reportSection.classList.remove('pass');
+                reportTitle.textContent = '📊 Accessibility Report';
+                reportSummary.textContent = `Your document scored ${report.compliance_score}% on WCAG 2.2 AA compliance. ${report.issues_count} issue(s) found that need attention.`;
+            }
+
+            // Display statistics
+            reportStats.innerHTML = '';
+
+            if (report.issues_count > 0) {
+                const errorStat = document.createElement('div');
+                errorStat.className = 'report-stat error';
+                errorStat.innerHTML = `
+                    <div class="number">${report.issues_count}</div>
+                    <div>Issue${report.issues_count !== 1 ? 's' : ''}</div>
+                `;
+                reportStats.appendChild(errorStat);
+            }
+
+            if (report.warnings_count > 0) {
+                const warningStat = document.createElement('div');
+                warningStat.className = 'report-stat warning';
+                warningStat.innerHTML = `
+                    <div class="number">${report.warnings_count}</div>
+                    <div>Warning${report.warnings_count !== 1 ? 's' : ''}</div>
+                `;
+                reportStats.appendChild(warningStat);
+            }
+
+            const passStat = document.createElement('div');
+            passStat.className = 'report-stat pass';
+            passStat.innerHTML = `
+                <div class="number">${report.passed_count}</div>
+                <div>Passed</div>
+            `;
+            reportStats.appendChild(passStat);
+
+            // Show/hide report buttons
+            if (hasIssues) {
+                viewFullReport.style.display = 'inline-block';
+                downloadReport.style.display = 'inline-block';
+
+                // Wire up buttons
+                viewFullReport.onclick = () => {
+                    window.open(`/report/${sessionId}`, '_blank');
+                };
+
+                downloadReport.onclick = () => {
+                    window.location.href = `/download/${sessionId}/report_txt`;
+                };
+
+                // Show interactive remediation button
+                const interactiveBtn = document.getElementById('interactiveRemediate');
+                if (interactiveBtn) {
+                    interactiveBtn.style.display = 'inline-block';
+                    interactiveBtn.onclick = () => {
+                        window.location.href = `/remediate/${sessionId}`;
+                    };
+                }
+            } else {
+                viewFullReport.style.display = 'none';
+                downloadReport.style.display = 'none';
+                document.getElementById('interactiveRemediate').style.display = 'none';
+            }
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        downloadHtml.addEventListener('click', () => {
+            if (currentSessionId) {
+                window.location.href = `/download/${currentSessionId}/html`;
+            }
+        });
+
+        downloadPdf.addEventListener('click', () => {
+            if (currentSessionId) {
+                window.location.href = `/download/${currentSessionId}/pdf`;
+            }
+        });
+
+        processAnother.addEventListener('click', () => {
+            // Clean up old session
+            if (currentSessionId) {
+                fetch(`/cleanup/${currentSessionId}`, { method: 'POST' });
+            }
+
+            // Reset UI
+            currentSessionId = null;
+            selectedFile = null;
+            fileInput.value = '';
+            fileName.textContent = '';
+            remediateBtn.style.display = 'none';
+            resultsSection.style.display = 'none';
+            progressContainer.style.display = 'none';
+            errorMessage.style.display = 'none';
+            progressFill.style.width = '0%';
+
+            // Reset report section
+            const reportSection = document.getElementById('reportSection');
+            reportSection.style.display = 'none';
+            reportSection.classList.remove('pass');
+        });
+    </script>
+</body>
+</html>
