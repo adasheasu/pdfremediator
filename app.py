@@ -54,11 +54,17 @@ def upload_file():
         input_path = os.path.join(session_folder, filename)
         file.save(input_path)
 
+        # Get custom document title from form
+        document_title = request.form.get('document_title', '').strip()
+        if not document_title:
+            # Fallback to filename-based title
+            document_title = os.path.splitext(filename)[0].replace('_', ' ')
+
         # Process the PDF
         output_folder = os.path.join(app.config['OUTPUT_FOLDER'], session_id)
         os.makedirs(output_folder, exist_ok=True)
 
-        result = processor.process_pdf(input_path, output_folder)
+        result = processor.process_pdf(input_path, output_folder, document_title=document_title)
 
         # Run accessibility check on remediated HTML
         html_path = os.path.join(output_folder, result['html_file'])
@@ -93,6 +99,48 @@ def upload_file():
             'original_name': filename,
             'accessibility_report': accessibility_report,
             'has_issues': accessibility_report['issues_count'] > 0 or accessibility_report['warnings_count'] > 0
+        })
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/analyze', methods=['POST'])
+def analyze_file():
+    """Analyze PDF accessibility without remediation"""
+    try:
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file provided'}), 400
+
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'error': 'No file selected'}), 400
+
+        if not file.filename.lower().endswith('.pdf'):
+            return jsonify({'error': 'Only PDF files are allowed'}), 400
+
+        # Generate unique session ID for temporary storage
+        session_id = str(uuid.uuid4())
+        session_folder = os.path.join(app.config['UPLOAD_FOLDER'], session_id)
+        os.makedirs(session_folder, exist_ok=True)
+
+        # Save uploaded file
+        filename = secure_filename(file.filename)
+        input_path = os.path.join(session_folder, filename)
+        file.save(input_path)
+
+        # Convert PDF to HTML (without remediation)
+        html_content, extracted_styles = processor.pdf_to_html_with_styles(input_path)
+
+        # Run accessibility check on ORIGINAL HTML (before remediation)
+        accessibility_report = checker.check_accessibility(html_content, processor.ocr_warning)
+
+        # Clean up temporary files
+        shutil.rmtree(session_folder)
+
+        return jsonify({
+            'success': True,
+            'accessibility_report': accessibility_report,
+            'message': 'Analysis complete. Review issues before proceeding with remediation.'
         })
 
     except Exception as e:

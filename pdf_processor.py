@@ -88,7 +88,7 @@ class PDFProcessor:
             print(f"Warning: Error during OCR detection: {e}")
             return False, ""
 
-    def process_pdf(self, input_pdf_path, output_folder):
+    def process_pdf(self, input_pdf_path, output_folder, document_title=None):
         """Main processing pipeline"""
         # Step 0: Check if PDF needs OCR
         needs_ocr, ocr_reason = self.detect_ocr_needed(input_pdf_path)
@@ -99,6 +99,13 @@ class PDFProcessor:
 
         # Extract original filename (without extension)
         original_filename = os.path.splitext(os.path.basename(input_pdf_path))[0]
+
+        # Use provided document title or fallback to filename
+        if not document_title:
+            document_title = original_filename.replace('_', ' ')
+
+        # Store document title for use in HTML generation
+        self.document_title = document_title
 
         # Step 1: Convert PDF to HTML with style preservation
         html_content, extracted_styles = self.pdf_to_html_with_styles(input_pdf_path)
@@ -721,12 +728,17 @@ class PDFProcessor:
             html_tag['lang'] = 'en'
 
         # Ensure document title
-        if not soup.find('title'):
+        title_tag = soup.find('title')
+        if not title_tag:
             head = soup.find('head')
             if head:
-                title = soup.new_tag('title')
-                title.string = 'Remediated Document'
-                head.append(title)
+                title_tag = soup.new_tag('title')
+                head.append(title_tag)
+
+        # Set document title (use custom title if available)
+        if title_tag:
+            doc_title = getattr(self, 'document_title', 'Remediated Document')
+            title_tag.string = doc_title
 
         # Add alt text to images (preserving layout)
         self.add_alt_text_to_images(soup)
@@ -957,12 +969,212 @@ class PDFProcessor:
         if main and not main.get('role'):
             main['role'] = 'main'
 
+    def add_semantic_structure_for_pdf(self, html_content):
+        """
+        Convert absolutely positioned divs to semantic elements for PDF tagging.
+        Detects headings and creates proper structure for screen readers and PDF tags.
+        """
+        from bs4 import BeautifulSoup
+        import re
+
+        soup = BeautifulSoup(html_content, 'html5lib')
+        main = soup.find('main')
+
+        if not main:
+            return html_content
+
+        # Find all pdf-page containers
+        pdf_pages = main.find_all('div', class_='pdf-page')
+
+        for pdf_page in pdf_pages:
+            # Get all positioned divs (text lines), excluding those inside tables
+            all_positioned_divs = pdf_page.find_all('div', style=lambda value: value and 'position: absolute' in value, recursive=False)
+
+            # Filter out divs that contain tables (table containers)
+            positioned_divs = []
+            for div in all_positioned_divs:
+                # Skip if this div contains a table
+                if div.find('table'):
+                    continue
+                positioned_divs.append(div)
+
+            if not positioned_divs:
+                continue
+
+            # Sort by vertical position for correct reading order
+            def get_top_position(div):
+                style = div.get('style', '')
+                try:
+                    for part in style.split(';'):
+                        if 'top:' in part:
+                            return float(part.split('top:')[1].replace('pt', '').strip())
+                except:
+                    pass
+                return 0
+
+            positioned_divs.sort(key=get_top_position)
+
+            # Mark positioned divs as presentation only (hide from screen readers and PDF tags)
+            # BUT: Don't hide divs that contain tables - tables should remain accessible
+            for div in all_positioned_divs:
+                if not div.find('table'):  # Only hide non-table divs
+                    div['aria-hidden'] = 'true'
+
+            # Extract font size and style information
+            def get_text_properties(div):
+                text = div.get_text(strip=True)
+                span = div.find('span')
+                if not span:
+                    return text, 11.0, False  # defaults
+
+                style = span.get('style', '')
+                font_size = 11.0
+                is_bold = False
+
+                for part in style.split(';'):
+                    if 'font-size:' in part:
+                        try:
+                            font_size = float(part.split('font-size:')[1].replace('pt', '').strip())
+                        except:
+                            pass
+                    if 'font-weight:' in part and 'bold' in part:
+                        is_bold = True
+
+                return text, font_size, is_bold
+
+            # Create semantic content with proper heading hierarchy
+            semantic_section = soup.new_tag('section', attrs={'class': 'accessible-content'})
+
+            # Analyze all lines to find typical body text size
+            body_sizes = []
+            for div in positioned_divs:
+                text, size, is_bold = get_text_properties(div)
+                if len(text) > 50:  # Longer text likely body text
+                    body_sizes.append(size)
+
+            # Determine body text size (most common size for longer text)
+            body_text_size = max(set(body_sizes), key=body_sizes.count) if body_sizes else 11.0
+
+            # Track if we detect an h1 from content
+            h1_detected_from_content = False
+
+            # First pass: check if any content would become h1
+            for i, div in enumerate(positioned_divs):
+                text, font_size, is_bold = get_text_properties(div)
+                if text and is_bold and len(text) < 100 and i < 3:
+                    h1_detected_from_content = True
+                    break
+
+            # Add document title as h1 if no h1 detected in content
+            if not h1_detected_from_content and hasattr(self, 'document_title') and self.document_title:
+                doc_title_h1 = soup.new_tag('h1')
+                doc_title_h1.string = self.document_title
+                semantic_section.append(doc_title_h1)
+
+            # Convert positioned divs to semantic elements
+            h1_used = not h1_detected_from_content  # Mark h1 as used if we added doc title
+            for i, div in enumerate(positioned_divs):
+                text, font_size, is_bold = get_text_properties(div)
+
+                if not text:
+                    continue
+
+                # Heading detection logic
+                is_heading = False
+                heading_level = None
+
+                # Check if this looks like a heading
+                if is_bold and len(text) < 100:  # Bold and reasonably short
+                    # First bold text at top of page
+                    if i < 3 and not h1_used:
+                        is_heading = True
+                        heading_level = 'h1'
+                        h1_used = True
+                    # Subsequent bold headings
+                    elif font_size > body_text_size:
+                        is_heading = True
+                        heading_level = 'h2'
+                    # Bold text might be a heading
+                    elif i < 10 and font_size >= body_text_size:
+                        is_heading = True
+                        heading_level = 'h3'
+
+                # Create appropriate element
+                if is_heading and heading_level:
+                    element = soup.new_tag(heading_level)
+                    element.string = text
+                else:
+                    element = soup.new_tag('p')
+                    element.string = text
+
+                semantic_section.append(element)
+
+            # Add tables to semantic content
+            # Tables are in positioned divs, so we need to clone them to semantic layer
+            table_containers = pdf_page.find_all('div', style=lambda v: v and 'position: absolute' in v)
+            for container in table_containers:
+                table = container.find('table')
+                if table:
+                    # Clone the table into semantic layer
+                    import copy
+                    table_copy = copy.copy(table)
+                    semantic_section.append(table_copy)
+
+            # Insert semantic content at beginning (will be read by screen readers and tagged in PDF)
+            pdf_page.insert(0, semantic_section)
+
+        # Add CSS to toggle between visual and semantic layers
+        style_tag = soup.find('style')
+        if style_tag:
+            style_tag.string += '''
+        /* Semantic layer - hidden in browser, visible in PDF */
+        .accessible-content {
+            display: none;
+        }
+        .accessible-content h1, .accessible-content h2, .accessible-content h3 {
+            margin: 1em 0 0.5em 0;
+            font-weight: bold;
+        }
+        .accessible-content h1 { font-size: 1.5em; }
+        .accessible-content h2 { font-size: 1.3em; }
+        .accessible-content h3 { font-size: 1.1em; }
+        .accessible-content p {
+            margin: 0.5em 0;
+            line-height: 1.5;
+        }
+        /* On print/PDF: show semantic layer, hide visual layer completely */
+        @media print {
+            /* Show semantic layer */
+            .accessible-content {
+                display: block !important;
+                margin: 20px;
+            }
+            /* Hide all visual positioned content */
+            .pdf-page > div[style*="position: absolute"] {
+                display: none !important;
+            }
+            [aria-hidden="true"] {
+                display: none !important;
+            }
+            .pdf-page {
+                position: static !important;
+                width: auto !important;
+                height: auto !important;
+            }
+        }
+        '''
+
+        return soup.decode(formatter='html')
+
     def html_to_pdf_with_browser(self, html_content, output_path):
         """
         Convert HTML to PDF using Playwright browser rendering.
         This method produces PDFs that closely match browser print output
         and maintain excellent accessibility.
         """
+        # Convert positioned divs to semantic structure for PDF tagging
+        html_content = self.add_semantic_structure_for_pdf(html_content)
+
         # Detect page orientation from HTML
         orientation, page_info = self.detect_page_orientation(html_content)
 

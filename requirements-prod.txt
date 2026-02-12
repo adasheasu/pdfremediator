@@ -1,0 +1,8 @@
+# Production requirements (includes all base requirements plus production server)
+-r requirements.txt
+
+# Production WSGI server
+gunicorn==21.2.0
+
+# Optional: Better process management
+supervisor==4.2.5
