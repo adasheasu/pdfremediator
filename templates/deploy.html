@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploy PDF Remediation Tool - Easy Setup Guide</title>
+    <script>
+        // CONFIGURATION: Update this URL to match where your tool is hosted
+        // Examples:
+        // - Local: 'http://localhost:8080'
+        // - Network: 'http://10.153.52.30:8080'
+        // - EC2: 'http://YOUR_EC2_IP' or 'http://YOUR_EC2_IP:8080'
+        // - Custom domain: 'https://tool.yourdomain.com'
+        const TOOL_URL = 'http://localhost:8080';
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, 'Nimbus Sans L', 'Liberation Sans', FreeSans, sans-serif;
+            line-height: 1.6;
+            color: #000000;
+            background: linear-gradient(135deg, #8C1D40 0%, #FFC627 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8C1D40 0%, #FFC627 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .step {
+            background: #f8f9fa;
+            border-left: 5px solid #8C1D40;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #8C1D40;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .step h2 {
+            color: #8C1D40;
+            margin-bottom: 15px;
+            padding-top: 10px;
+        }
+
+        .step p {
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .code-box {
+            background: #FFFFFF;
+            color: #000000;
+            padding: 20px;
+            border-radius: 8px;
+            border: 3px solid #8C1D40;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            overflow-x: auto;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #00A3E0;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #0082B3;
+        }
+
+        .copy-btn.copied {
+            background: #27ae60;
+        }
+
+        .alert {
+            background: #FFF9E5;
+            border-left: 5px solid #FFC627;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        .alert-info {
+            background: #E5F5FC;
+            border-left-color: #00A3E0;
+        }
+
+        .share-box {
+            background: linear-gradient(135deg, #8C1D40 0%, #FFC627 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .share-url {
+            background: white;
+            color: #000000;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #8C1D40;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            background: #6B1534;
+        }
+
+        .btn-secondary {
+            background: #747474;
+        }
+
+        .btn-secondary:hover {
+            background: #5A5A5A;
+        }
+
+        .quick-start {
+            background: linear-gradient(135deg, #8C1D40 0%, #FFC627 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .quick-start h2 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .os-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .os-tab {
+            flex: 1;
+            padding: 15px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .os-tab:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .os-tab.active {
+            background: white;
+            color: #8C1D40;
+            border-color: white;
+        }
+
+        .os-content {
+            display: none;
+        }
+
+        .os-content.active {
+            display: block;
+        }
+
+        .checklist {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .checklist-item {
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 3px solid #ddd;
+            padding-left: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checklist-item:hover {
+            border-left-color: #8C1D40;
+            background: #f8f9fa;
+        }
+
+        .checklist-item.checked {
+            border-left-color: #28a745;
+            background: #d4edda;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .footer {
+            background: #000000;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .video-placeholder {
+            background: #000000;
+            color: white;
+            padding: 60px;
+            text-align: center;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .step {
+                padding: 20px;
+            }
+
+            .os-tabs {
+                flex-direction: column;
+            }
+        }
+
+        /* WCAG 2.2 AA Accessibility Enhancements */
+
+        /* Skip Link (WCAG 2.4.1) */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #8C1D40;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            z-index: 1000;
+            border-radius: 0 0 8px 0;
+        }
+
+        .skip-link:focus {
+            top: 0;
+            outline: 3px solid white;
+            outline-offset: 2px;
+        }
+
+        /* Enhanced Focus Indicators (WCAG 2.4.7) */
+        a:focus,
+        button:focus,
+        input:focus,
+        .os-tab:focus,
+        .checklist-item:focus {
+            outline: 3px solid #FFC627;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 5px rgba(255, 198, 39, 0.3);
+        }
+
+        .header a:focus {
+            outline: 3px solid white;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip Navigation Link (WCAG 2.4.1) -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="container">
+        <header class="header" role="banner">
+            <h1><span aria-hidden="true">🚀</span> Share PDF Remediation Tool</h1>
+            <p>Simple deployment guide for your team - no coding required!</p>
+            <nav aria-label="Navigation">
+                <a href="index.html" style="color: white; text-decoration: none; display: inline-block; margin-top: 15px; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 8px; font-weight: bold;"><span aria-hidden="true">←</span> Back to Home</a>
+            </nav>
+        </header>
+
+        <main class="content" id="main-content" role="main">
+            <!-- Current Status -->
+            <div class="alert-success alert">
+                <h3 style="margin-bottom: 10px;"><span aria-hidden="true">✅</span> Great News! The Tool is Already Running</h3>
+                <p>Your PDF Remediation Tool is currently accessible on your local network.</p>
+            </div>
+
+            <div class="share-box">
+                <h2>📡 Share This URL With Your Team</h2>
+                <div class="share-url" id="shareUrl" role="status" aria-live="polite">Loading...</div>
+                <button class="btn" onclick="copyShareUrl()" aria-label="Copy share URL to clipboard"><span aria-hidden="true">📋</span> Copy URL</button>
+                <button class="btn btn-secondary" onclick="testConnection()" aria-label="Test network connection"><span aria-hidden="true">🔍</span> Test Connection</button>
+                <p style="margin-top: 15px; opacity: 0.9;">
+                    Anyone on the same WiFi network can access this URL
+                </p>
+            </div>
+
+            <!-- Quick Start Guide -->
+            <div class="quick-start">
+                <h2>⚡ Quick Start (3 Minutes)</h2>
+                <p>Already running? Skip to <strong>Step 3</strong> to share with your team!</p>
+
+                <div class="checklist">
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        ☐ Tool is running on my computer
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        ☐ Found my computer's IP address
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        ☐ Shared URL with team members
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        ☐ Team members can access the tool
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 1: Make Sure Tool is Running -->
+            <div class="step">
+                <div class="step-number">1</div>
+                <h2><span aria-hidden="true">🟢</span> Make Sure the Tool is Running</h2>
+                <p>The tool needs to be running on your computer for others to access it.</p>
+
+                <h3 style="margin-top: 20px; color: #000000;">Option A: Is it already running?</h3>
+                <p>If you can see this page, it's already running! Skip to Step 2.</p>
+
+                <h3 style="margin-top: 20px; color: #000000;">Option B: Start it yourself</h3>
+
+                <!-- OS Tabs -->
+                <div class="os-tabs" role="tablist" aria-label="Operating system selection">
+                    <div class="os-tab active" role="tab" tabindex="0" onclick="switchOS('mac')" onkeypress="if(event.key==='Enter')switchOS('mac')" aria-selected="true" aria-controls="mac-content">
+                        🍎 Mac
+                    </div>
+                    <div class="os-tab" role="tab" tabindex="0" onclick="switchOS('windows')" onkeypress="if(event.key==='Enter')switchOS('windows')" aria-selected="false" aria-controls="windows-content">
+                        🪟 Windows
+                    </div>
+                    <div class="os-tab" role="tab" tabindex="0" onclick="switchOS('linux')" onkeypress="if(event.key==='Enter')switchOS('linux')" aria-selected="false" aria-controls="linux-content">
+                        🐧 Linux
+                    </div>
+                </div>
+
+                <!-- Mac Instructions -->
+                <div class="os-content active" id="mac">
+                    <p><strong>Open Terminal</strong> (press Cmd+Space, type "Terminal", press Enter)</p>
+                    <p>Copy and paste these commands one at a time:</p>
+
+                    <div class="code-box">
+                        <button class="copy-btn" onclick="copyCode(this, 'mac-cmd-1')">Copy</button>
+                        <div id="mac-cmd-1">cd /Users/alejandradashe/pdfremediatorfolder/pdf_remediation_tool</div>
+                    </div>
+
+                    <div class="code-box">
+                        <button class="copy-btn" onclick="copyCode(this, 'mac-cmd-2')">Copy</button>
+                        <div id="mac-cmd-2">python3 app.py</div>
+                    </div>
+
+                    <div class="alert-info alert">
+                        <strong><span aria-hidden="true">✅</span> Success!</strong> You should see: "Running on http://0.0.0.0:8080"
+                    </div>
+                </div>
+
+                <!-- Windows Instructions -->
+                <div class="os-content" id="windows">
+                    <p><strong>Open Command Prompt</strong> (press Windows key, type "cmd", press Enter)</p>
+                    <p>Copy and paste these commands:</p>
+
+                    <div class="code-box">
+                        <button class="copy-btn" onclick="copyCode(this, 'win-cmd-1')">Copy</button>
+                        <div id="win-cmd-1">cd C:\Users\alejandradashe\pdfremediatorfolder\pdf_remediation_tool</div>
+                    </div>
+
+                    <div class="code-box">
+                        <button class="copy-btn" onclick="copyCode(this, 'win-cmd-2')">Copy</button>
+                        <div id="win-cmd-2">python app.py</div>
+                    </div>
+
+                    <div class="alert-info alert">
+                        <strong><span aria-hidden="true">✅</span> Success!</strong> You should see: "Running on http://0.0.0.0:8080"
+                    </div>
+                </div>
+
+                <!-- Linux Instructions -->
+                <div class="os-content" id="linux">
+                    <p><strong>Open Terminal</strong> (Ctrl+Alt+T)</p>
+                    <p>Copy and paste these commands:</p>
+
+                    <div class="code-box">
+                        <button class="copy-btn" onclick="copyCode(this, 'linux-cmd-1')">Copy</button>
+                        <div id="linux-cmd-1">cd ~/pdfremediatorfolder/pdf_remediation_tool</div>
+                    </div>
+
+                    <div class="code-box">
+                        <button class="copy-btn" onclick="copyCode(this, 'linux-cmd-2')">Copy</button>
+                        <div id="linux-cmd-2">python3 app.py</div>
+                    </div>
+
+                    <div class="alert-info alert">
+                        <strong><span aria-hidden="true">✅</span> Success!</strong> You should see: "Running on http://0.0.0.0:8080"
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Find Your IP Address -->
+            <div class="step">
+                <div class="step-number">2</div>
+                <h2><span aria-hidden="true">🔍</span> Find Your Computer's Address</h2>
+                <p>Your team needs your computer's IP address to access the tool.</p>
+
+                <button class="btn" onclick="detectIP()" style="margin: 20px 0;">
+                    🔎 Auto-Detect My IP Address
+                </button>
+
+                <div id="ipResult" style="display: none; margin: 20px 0;">
+                    <div class="alert-success alert">
+                        <h3>Your IP Address:</h3>
+                        <div style="font-size: 1.5em; font-weight: bold; margin: 10px 0;" id="detectedIP"></div>
+                        <p>Share this with your team: <strong id="fullURL"></strong></p>
+                        <button class="btn" onclick="copyFullURL()"><span aria-hidden="true">📋</span> Copy Full URL</button>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px; color: #000000;">Manual Method (if auto-detect doesn't work):</h3>
+
+                <div class="os-tabs">
+                    <div class="os-tab active" onclick="switchIPMethod('ip-mac')">
+                        🍎 Mac
+                    </div>
+                    <div class="os-tab" onclick="switchIPMethod('ip-windows')">
+                        🪟 Windows
+                    </div>
+                    <div class="os-tab" onclick="switchIPMethod('ip-linux')">
+                        🐧 Linux
+                    </div>
+                </div>
+
+                <div class="os-content active" id="ip-mac">
+                    <p>Open Terminal and run:</p>
+                    <div class="code-box">
+                        <button class="copy-btn" onclick="copyCode(this, 'ip-mac-cmd')">Copy</button>
+                        <div id="ip-mac-cmd">ifconfig | grep "inet " | grep -v 127.0.0.1</div>
+                    </div>
+                    <p>Look for something like <strong>192.168.x.x</strong></p>
+                </div>
+
+                <div class="os-content" id="ip-windows">
+                    <p>Open Command Prompt and run:</p>
+                    <div class="code-box">
+                        <button class="copy-btn" onclick="copyCode(this, 'ip-win-cmd')">Copy</button>
+                        <div id="ip-win-cmd">ipconfig</div>
+                    </div>
+                    <p>Look for "IPv4 Address" under your WiFi adapter (something like <strong>192.168.x.x</strong>)</p>
+                </div>
+
+                <div class="os-content" id="ip-linux">
+                    <p>Open Terminal and run:</p>
+                    <div class="code-box">
+                        <button class="copy-btn" onclick="copyCode(this, 'ip-linux-cmd')">Copy</button>
+                        <div id="ip-linux-cmd">ip addr show | grep "inet "</div>
+                    </div>
+                    <p>Look for something like <strong>192.168.x.x</strong></p>
+                </div>
+            </div>
+
+            <!-- Step 3: Share With Team -->
+            <div class="step">
+                <div class="step-number">3</div>
+                <h2><span aria-hidden="true">📤</span> Share With Your Team</h2>
+                <p>Send your team the URL. They just need to:</p>
+
+                <ol style="margin: 20px 0; padding-left: 30px; font-size: 1.1em;">
+                    <li style="margin: 10px 0;">Be on the <strong>same WiFi network</strong> as you</li>
+                    <li style="margin: 10px 0;">Open their web browser (Chrome, Firefox, Safari, etc.)</li>
+                    <li style="margin: 10px 0;">Type in the URL you give them</li>
+                    <li style="margin: 10px 0;">Start remediating PDFs! 🎉</li>
+                </ol>
+
+                <div class="alert-info alert">
+                    <h3><span aria-hidden="true">💡</span> Pro Tips:</h3>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>Bookmark the URL for easy access</li>
+                        <li>Keep your computer awake and the tool running</li>
+                        <li>Everyone can use it at the same time</li>
+                        <li>Works on phones and tablets too!</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 30px; color: #000000;"><span aria-hidden="true">📧</span> Sample Email to Send:</h3>
+                <div class="code-box" style="background: white; color: #000000; border: 2px solid #ddd;">
+                    <button class="copy-btn" onclick="copyCode(this, 'email-template')">Copy Email</button>
+                    <div id="email-template" style="white-space: pre-line;">Hi Team!
+
+I've set up the PDF Remediation Tool for us to use. Here's how to access it:
+
+1. Make sure you're on our WiFi network
+2. Open your web browser
+3. Go to: <span id="emailURL" style="font-weight: bold;">[Your URL will appear here]</span>
+4. Upload a PDF and click "Remediate"!
+
+The tool automatically:
+✅ Fixes accessibility issues
+✅ Adds proper headings
+✅ Makes PDFs screen-reader friendly
+✅ Generates compliance reports
+
+Let me know if you have any questions!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Troubleshooting -->
+            <div class="step">
+                <div class="step-number">?</div>
+                <h2><span aria-hidden="true">🔧</span> Troubleshooting</h2>
+
+                <details style="margin: 15px 0;">
+                    <summary style="font-weight: bold; cursor: pointer; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                        <span aria-hidden="true">❌</span> "This site can't be reached" or "Connection refused"
+                    </summary>
+                    <div style="padding: 15px; background: white; margin-top: 10px; border-radius: 5px;">
+                        <p><strong>Solutions:</strong></p>
+                        <ul style="padding-left: 20px;">
+                            <li>Make sure the tool is still running on your computer</li>
+                            <li>Check that both computers are on the same WiFi network</li>
+                            <li>Double-check the IP address is correct</li>
+                            <li>Try turning off VPN if you have one</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details style="margin: 15px 0;">
+                    <summary style="font-weight: bold; cursor: pointer; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                        <span aria-hidden="true">⚠️</span> Tool stops working when I close my computer
+                    </summary>
+                    <div style="padding: 15px; background: white; margin-top: 10px; border-radius: 5px;">
+                        <p>The tool needs to keep running. To prevent this:</p>
+                        <ul style="padding-left: 20px;">
+                            <li><strong>Mac:</strong> System Preferences → Energy Saver → Prevent computer from sleeping</li>
+                            <li><strong>Windows:</strong> Settings → System → Power & Sleep → Never</li>
+                            <li>Or use the "Keep Running" commands in the Advanced Guide</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details style="margin: 15px 0;">
+                    <summary style="font-weight: bold; cursor: pointer; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                        <span aria-hidden="true">🌐</span> Want to share outside your network?
+                    </summary>
+                    <div style="padding: 15px; background: white; margin-top: 10px; border-radius: 5px;">
+                        <p>For internet access (not just local network), check the README file in the deployment package for AWS EC2 setup instructions.</p>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="alert" style="background: linear-gradient(135deg, #8C1D40 0%, #FFC627 100%); border: none; color: white;">
+                <h2 style="color: white; margin-bottom: 15px;"><span aria-hidden="true">🎯</span> What's Next?</h2>
+                <p style="font-size: 1.1em;">Once your team can access the tool, consider:</p>
+                <ul style="margin: 15px 0; padding-left: 20px; font-size: 1.05em;">
+                    <li>Setting up permanent hosting on AWS (see README for EC2 instructions)</li>
+                    <li>Creating a shared document with the URL</li>
+                    <li>Training team members on accessibility best practices</li>
+                    <li>Setting up regular check-ins to ensure everyone can access it</li>
+                </ul>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="index.html" class="btn" style="background: white; color: #8C1D40;"><span aria-hidden="true">←</span> Back to Home</a>
+                    <a href="training.html" class="btn btn-secondary"><span aria-hidden="true">📚</span> Training</a>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer" role="contentinfo">
+            <img src="https://www.asu.edu/profiles/contrib/webspark/modules/asu_footer/img/ASU-EndorsedLogo.png" alt="Arizona State University" style="height: 60px; margin-bottom: 15px;">
+            <p><strong>Arizona State University</strong></p>
+            <p>Making digital content accessible to everyone</p>
+            <p style="margin-top: 15px; opacity: 0.8;">© 2026 Arizona State University</p>
+        </footer>
+    </div>
+
+    <script>
+        // Load current URL
+        window.addEventListener('DOMContentLoaded', function() {
+            // Use the configured TOOL_URL or construct from current hostname
+            const url = TOOL_URL || 'http://' + window.location.hostname + ':8080';
+            document.getElementById('shareUrl').textContent = url;
+            document.getElementById('emailURL').textContent = url;
+        });
+
+        // Copy share URL
+        function copyShareUrl() {
+            const url = document.getElementById('shareUrl').textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('✅ URL copied to clipboard!\n\nShare this with your team: ' + url);
+            });
+        }
+
+        // Copy full URL after detection
+        function copyFullURL() {
+            const url = document.getElementById('fullURL').textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('✅ URL copied to clipboard!');
+            });
+        }
+
+        // Test connection
+        function testConnection() {
+            const url = document.getElementById('shareUrl').textContent;
+            window.open(url, '_blank');
+        }
+
+        // Switch OS tabs
+        function switchOS(os) {
+            // Update tabs
+            document.querySelectorAll('.os-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.os-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(os).classList.add('active');
+        }
+
+        // Switch IP method tabs
+        function switchIPMethod(method) {
+            document.querySelectorAll('.os-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.os-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(method).classList.add('active');
+        }
+
+        // Copy code snippets
+        function copyCode(button, elementId) {
+            const code = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = '✓ Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Toggle checklist items
+        function toggleCheck(item) {
+            item.classList.toggle('checked');
+            if (item.classList.contains('checked')) {
+                item.textContent = '✓' + item.textContent.substring(1);
+            } else {
+                item.textContent = '☐' + item.textContent.substring(1);
+            }
+        }
+
+        // Auto-detect IP
+        function detectIP() {
+            // Use configured TOOL_URL or construct from current hostname
+            const hostname = window.location.hostname || 'localhost';
+            const ip = hostname;
+            const url = TOOL_URL || 'http://' + ip + ':8080';
+
+            document.getElementById('detectedIP').textContent = ip;
+            document.getElementById('fullURL').textContent = url;
+            document.getElementById('ipResult').style.display = 'block';
+
+            // Update email template
+            document.getElementById('emailURL').textContent = url;
+        }
+    </script>
+</body>
+</html>

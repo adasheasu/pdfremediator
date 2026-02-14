@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibility Tool Finder - Which Tool Should I Use?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, 'Nimbus Sans L', 'Liberation Sans', FreeSans, sans-serif;
+            line-height: 1.6;
+            color: #000000;
+            background: linear-gradient(135deg, #8C1D40 0%, #FFC627 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8C1D40 0%, #FFC627 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: white;
+            color: #8C1D40;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .content {
+            padding: 50px 40px;
+        }
+
+        .breadcrumb {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+            color: #7f8c8d;
+        }
+
+        .breadcrumb span {
+            margin: 0 5px;
+        }
+
+        .breadcrumb .current {
+            color: #8C1D40;
+            font-weight: bold;
+        }
+
+        .question-section {
+            display: none;
+        }
+
+        .question-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-title {
+            color: #8C1D40;
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .option-card {
+            background: #f8f9fa;
+            border: 3px solid transparent;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .option-card:hover {
+            border-color: #8C1D40;
+            background: white;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(140, 29, 64, 0.2);
+        }
+
+        .option-card .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .option-card .title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 10px;
+        }
+
+        .option-card .description {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .result-section {
+            background: linear-gradient(135deg, #8C1D40 0%, #FFC627 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .result-section h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .result-section p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .tool-recommendation {
+            background: white;
+            color: #000000;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .tool-recommendation h3 {
+            color: #8C1D40;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .tool-link {
+            display: inline-block;
+            background: #8C1D40;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 10px 10px 0;
+            transition: background 0.3s;
+        }
+
+        .tool-link:hover {
+            background: #6B1631;
+        }
+
+        .tool-link.secondary {
+            background: #667eea;
+        }
+
+        .tool-link.secondary:hover {
+            background: #5568d3;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #8C1D40;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #6B1631;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(140, 29, 64, 0.3);
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #000000;
+        }
+
+        .btn-secondary:hover {
+            background: #bdc3c7;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border-left: 5px solid #17a2b8;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .info-box::before {
+            content: "💡 ";
+            font-size: 1.5em;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .warning-box::before {
+            content: "⚠️ ";
+            font-size: 1.5em;
+        }
+
+        .resources-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .resources-list li {
+            padding: 15px;
+            background: #f8f9fa;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #8C1D40;
+        }
+
+        .resources-list li strong {
+            color: #8C1D40;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            transition: all 0.3s;
+        }
+
+        .progress-dot.active {
+            background: #8C1D40;
+            transform: scale(1.5);
+        }
+
+        .progress-dot.completed {
+            background: #27ae60;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+        }
+
+        /* WCAG 2.2 AA Accessibility Enhancements */
+
+        /* Skip Link (WCAG 2.4.1) */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #8C1D40;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            z-index: 1000;
+            border-radius: 0 0 8px 0;
+        }
+
+        .skip-link:focus {
+            top: 0;
+            outline: 3px solid white;
+            outline-offset: 2px;
+        }
+
+        /* Enhanced Focus Indicators (WCAG 2.4.7) */
+        a:focus,
+        button:focus,
+        .option-card:focus,
+        .tool-btn:focus,
+        .nav-btn:focus {
+            outline: 3px solid #FFC627;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 5px rgba(255, 198, 39, 0.3);
+        }
+
+        .header a:focus,
+        .result-section a:focus {
+            outline: 3px solid white;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+
+        .footer {
+            background: #000000;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip Navigation Link (WCAG 2.4.1) -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="container">
+        <header class="header" role="banner">
+            <h1><span aria-hidden="true">🎯</span> Accessibility Tool Finder</h1>
+            <p>Find the right tool for your accessibility needs</p>
+            <nav aria-label="Main navigation">
+                <div class="nav-buttons">
+                    <a href="index.html" class="nav-btn"><span aria-hidden="true">🏠</span> Home</a>
+                    <a href="training.html" class="nav-btn">📚 Training</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class="content" id="main-content" role="main">
+            <nav class="breadcrumb" id="breadcrumb" aria-label="Decision tree breadcrumb navigation">
+                <span class="current">Start</span>
+            </nav>
+
+            <div class="progress-indicator" id="progressIndicator" role="progressbar" aria-label="Decision wizard progress" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1">
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+
+            <!-- Question 1: Content Type -->
+            <div class="question-section active" id="q1">
+                <h2 class="question-title">What type of content do you need to make accessible?</h2>
+
+                <div class="options-grid">
+                    <div class="option-card" role="button" tabindex="0" onclick="selectContentType('document')" onkeypress="if(event.key==='Enter')selectContentType('document')" aria-label="Select written document option">
+                        <div class="icon" aria-hidden="true">📄</div>
+                        <div class="title">Written Document</div>
+                        <div class="description">Text files, webpages, word processors</div>
+                    </div>
+
+                    <div class="option-card" role="button" tabindex="0" onclick="selectContentType('presentation')" onkeypress="if(event.key==='Enter')selectContentType('presentation')" aria-label="Select presentation option">
+                        <div class="icon">📊</div>
+                        <div class="title">Presentation</div>
+                        <div class="description">Slide decks and presentations</div>
+                    </div>
+
+                    <div class="option-card" onclick="selectContentType('spreadsheet')">
+                        <div class="icon">📈</div>
+                        <div class="title">Spreadsheet</div>
+                        <div class="description">Data tables and calculations</div>
+                    </div>
+
+                    <div class="option-card" role="button" tabindex="0" onclick="selectContentType('pdf')" onkeypress="if(event.key==='Enter')selectContentType('pdf')" aria-label="Select PDF option">
+                        <div class="icon">📕</div>
+                        <div class="title">PDF</div>
+                        <div class="description">Portable Document Format files</div>
+                    </div>
+
+                    <div class="option-card" onclick="selectContentType('media')">
+                        <div class="icon" aria-hidden="true">🎬</div>
+                        <div class="title">Video/Audio/Image</div>
+                        <div class="description">Multimedia content</div>
+                    </div>
+
+                    <div class="option-card" onclick="selectContentType('course')">
+                        <div class="icon">🎓</div>
+                        <div class="title">Online Course</div>
+                        <div class="description">Learning Management Systems</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 2: Document Software -->
+            <div class="question-section" id="q2-document">
+                <h2 class="question-title">What software is your document in?</h2>
+
+                <div class="options-grid">
+                    <div class="option-card" onclick="showResult('msoffice')">
+                        <div class="icon">📘</div>
+                        <div class="title">Microsoft Word</div>
+                        <div class="description">.doc, .docx, .odt, .rtf</div>
+                    </div>
+
+                    <div class="option-card" onclick="showResult('googledocs')">
+                        <div class="icon">📗</div>
+                        <div class="title">Google Docs</div>
+                        <div class="description">Google Workspace</div>
+                    </div>
+
+                    <div class="option-card" onclick="showResult('textfile')">
+                        <div class="icon">📃</div>
+                        <div class="title">Text/Markdown</div>
+                        <div class="description">.txt, .md, .markdown</div>
+                    </div>
+
+                    <div class="option-card" onclick="showResult('website')">
+                        <div class="icon" aria-hidden="true">🌐</div>
+                        <div class="title">Website/CMS</div>
+                        <div class="description">Drupal, WordPress, Google Sites, Wix</div>
+                    </div>
+
+                    <div class="option-card" role="button" tabindex="0" onclick="selectContentType('pdf')" onkeypress="if(event.key==='Enter')selectContentType('pdf')" aria-label="Select PDF option">
+                        <div class="icon">📕</div>
+                        <div class="title">PDF Format</div>
+                        <div class="description">Already in PDF</div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="goBack('q1')">← Back</button>
+                </div>
+            </div>
+
+            <!-- Question 2: Presentation Software -->
+            <div class="question-section" id="q2-presentation">
+                <h2 class="question-title">What software is your presentation in?</h2>
+
+                <div class="options-grid">
+                    <div class="option-card" onclick="showResult('powerpoint')">
+                        <div class="icon">📊</div>
+                        <div class="title">Microsoft PowerPoint</div>
+                        <div class="description">.ppt, .pptx</div>
+                    </div>
+
+                    <div class="option-card" onclick="showResult('googleslides')">
+                        <div class="icon">📽️</div>
+                        <div class="title">Google Slides</div>
+                        <div class="description">Google Workspace</div>
+                    </div>
+
+                    <div class="option-card" role="button" tabindex="0" onclick="selectContentType('pdf')" onkeypress="if(event.key==='Enter')selectContentType('pdf')" aria-label="Select PDF option">
+                        <div class="icon">📕</div>
+                        <div class="title">PDF Format</div>
+                        <div class="description">Already in PDF</div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="goBack('q1')">← Back</button>
+                </div>
+            </div>
+
+            <!-- Question 2: Spreadsheet Software -->
+            <div class="question-section" id="q2-spreadsheet">
+                <h2 class="question-title">What software is your spreadsheet in?</h2>
+
+                <div class="options-grid">
+                    <div class="option-card" onclick="showResult('excel')">
+                        <div class="icon">📊</div>
+                        <div class="title">Microsoft Excel</div>
+                        <div class="description">.xls, .xlsx</div>
+                    </div>
+
+                    <div class="option-card" onclick="showResult('googlesheets')">
+                        <div class="icon">📈</div>
+                        <div class="title">Google Sheets</div>
+                        <div class="description">Google Workspace</div>
+                    </div>
+
+                    <div class="option-card" role="button" tabindex="0" onclick="selectContentType('pdf')" onkeypress="if(event.key==='Enter')selectContentType('pdf')" aria-label="Select PDF option">
+                        <div class="icon">📕</div>
+                        <div class="title">PDF Format</div>
+                        <div class="description">Already in PDF</div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="goBack('q1')">← Back</button>
+                </div>
+            </div>
+
+            <!-- Question 2: PDF Source -->
+            <div class="question-section" id="q2-pdf">
+                <h2 class="question-title">Do you know the original source of this PDF?</h2>
+
+                <div class="info-box">
+                    <strong>Why This Matters:</strong> If you know where the PDF came from (Word, PowerPoint, etc.), it's better to remediate the original file and then export it as an accessible PDF. This preserves the structure and is easier to maintain.
+                </div>
+
+                <div class="options-grid">
+                    <div class="option-card" onclick="showResult('pdf-source-known')">
+                        <div class="icon">✅</div>
+                        <div class="title">Yes, I Know the Source</div>
+                        <div class="description">I have the original Word, PowerPoint, etc.</div>
+                    </div>
+
+                    <div class="option-card" onclick="showResult('pdf-source-unknown')">
+                        <div class="icon">❓</div>
+                        <div class="title">No, Source Unknown</div>
+                        <div class="description">Only have the PDF file</div>
+                    </div>
+
+                    <div class="option-card" onclick="showResult('pdf-scanned')">
+                        <div class="icon">🖨️</div>
+                        <div class="title">It's a Scanned PDF</div>
+                        <div class="description">Created from scanned images</div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="goBack('q1')">← Back</button>
+                </div>
+            </div>
+
+            <!-- Question 2: Media Type -->
+            <div class="question-section" id="q2-media">
+                <h2 class="question-title">What type of media do you have?</h2>
+
+                <div class="options-grid">
+                    <div class="option-card" onclick="showResult('video-published')">
+                        <div class="icon">📺</div>
+                        <div class="title">Published Video/Audio</div>
+                        <div class="description">YouTube, Vimeo, podcasts, Spotify</div>
+                    </div>
+
+                    <div class="option-card" onclick="showResult('video-unpublished')">
+                        <div class="icon">🎥</div>
+                        <div class="title">Unpublished Video/Audio</div>
+                        <div class="description">Local files on your computer</div>
+                    </div>
+
+                    <div class="option-card" onclick="showResult('image')">
+                        <div class="icon">🖼️</div>
+                        <div class="title">Images</div>
+                        <div class="description">.jpg, .png, .gif</div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="goBack('q1')">← Back</button>
+                </div>
+            </div>
+
+            <!-- Question 2: Course Platform -->
+            <div class="question-section" id="q2-course">
+                <h2 class="question-title">What Learning Management System (LMS) is your course in?</h2>
+
+                <div class="options-grid">
+                    <div class="option-card" onclick="showResult('canvas')">
+                        <div class="icon">🎓</div>
+                        <div class="title">Canvas</div>
+                        <div class="description">Canvas Academic or Learning Enterprise</div>
+                    </div>
+
+                    <div class="option-card" onclick="showResult('articulate')">
+                        <div class="icon" aria-hidden="true">🎬</div>
+                        <div class="title">Articulate 360</div>
+                        <div class="description">Rise, Storyline</div>
+                    </div>
+
+                    <div class="option-card" onclick="showResult('other-lms')">
+                        <div class="icon">💻</div>
+                        <div class="title">Other LMS</div>
+                        <div class="description">Moodle, Coursera, Workday</div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="goBack('q1')">← Back</button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="question-section" id="result">
+                <!-- Results will be dynamically inserted here -->
+            </div>
+        </main>
+
+        <footer class="footer" role="contentinfo">
+            <img src="https://www.asu.edu/profiles/contrib/webspark/modules/asu_footer/img/ASU-EndorsedLogo.png" alt="Arizona State University" style="height: 60px; margin-bottom: 15px;">
+            <p><strong>Arizona State University</strong></p>
+            <p>Making digital content accessible to everyone</p>
+            <p style="margin-top: 15px; opacity: 0.8;">© 2026 Arizona State University</p>
+        </footer>
+    </div>
+
+    <script>
+        let currentPath = ['Start'];
+
+        function updateBreadcrumb() {
+            const breadcrumb = document.getElementById('breadcrumb');
+            breadcrumb.innerHTML = currentPath.map((item, index) => {
+                const isLast = index === currentPath.length - 1;
+                const className = isLast ? 'current' : '';
+                return `<span class="${className}">${item}</span>`;
+            }).join(' <span>→</span> ');
+        }
+
+        function updateProgress(step) {
+            const dots = document.querySelectorAll('.progress-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active', 'completed');
+                if (index < step - 1) {
+                    dot.classList.add('completed');
+                } else if (index === step - 1) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+
+        function selectContentType(type) {
+            // Hide all sections
+            document.querySelectorAll('.question-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Update path
+            const typeNames = {
+                'document': 'Written Document',
+                'presentation': 'Presentation',
+                'spreadsheet': 'Spreadsheet',
+                'pdf': 'PDF',
+                'media': 'Media',
+                'course': 'Course'
+            };
+
+            currentPath.push(typeNames[type]);
+            updateBreadcrumb();
+            updateProgress(2);
+
+            // Show appropriate next question
+            const sectionId = `q2-${type}`;
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.add('active');
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function goBack(sectionId) {
+            document.querySelectorAll('.question-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update breadcrumb
+            if (currentPath.length > 1) {
+                currentPath.pop();
+            }
+            updateBreadcrumb();
+            updateProgress(1);
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showResult(resultType) {
+            // Hide all sections
+            document.querySelectorAll('.question-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            updateProgress(3);
+
+            const resultSection = document.getElementById('result');
+            resultSection.innerHTML = getResultContent(resultType);
+            resultSection.classList.add('active');
+            resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function getResultContent(type) {
+            const results = {
+                'msoffice': `
+                    <div class="result-section">
+                        <h2>📘 Microsoft Office Accessibility</h2>
+                        <p>For Microsoft Word documents, use the built-in Accessibility Checker to identify and fix issues.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>Recommended Tools:</h3>
+                            <p><strong>1. Microsoft Office Accessibility Checker</strong> - Built into Word, PowerPoint, and Excel</p>
+                            <a href="https://support.microsoft.com/en-us/office/improve-accessibility-with-the-accessibility-checker-a16f6de0-2f39-4a2b-8bd8-5ad801426c7f" class="tool-link" target="_blank">
+                                📖 Microsoft Accessibility Guide
+                            </a>
+
+                            <p style="margin-top: 20px;"><strong>2. Grackle</strong> - Alternative checker for Office documents</p>
+                            <a href="https://www.grackledocs.com/en/check-a-document/" class="tool-link secondary" target="_blank">
+                                🔍 Try Grackle
+                            </a>
+                        </div>
+
+                        <div class="info-box" style="margin-top: 20px;">
+                            <strong>Pro Tip:</strong> Always check accessibility BEFORE converting to PDF. It's much easier to fix issues in the source document.
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'googledocs': `
+                    <div class="result-section">
+                        <h2>📗 Google Workspace Accessibility</h2>
+                        <p>For Google Docs, use Grackle Docs to check and improve accessibility.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>Recommended Tool:</h3>
+                            <p><strong>Grackle Workspace</strong> - Comprehensive accessibility checker for Google Docs</p>
+                            <a href="https://www.grackledocs.com/en/products-services/grackle-workspace/google-docs/" class="tool-link" target="_blank">
+                                📖 Grackle Docs Guide
+                            </a>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'powerpoint': `
+                    <div class="result-section">
+                        <h2>📊 Microsoft PowerPoint Accessibility</h2>
+                        <p>Use PowerPoint's built-in Accessibility Checker to ensure your presentations are accessible.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>Recommended Tool:</h3>
+                            <p><strong>Microsoft Office Accessibility Checker</strong> - Built into PowerPoint</p>
+                            <a href="https://support.microsoft.com/en-us/office/improve-accessibility-with-the-accessibility-checker-a16f6de0-2f39-4a2b-8bd8-5ad801426c7f" class="tool-link" target="_blank">
+                                📖 PowerPoint Accessibility Guide
+                            </a>
+                        </div>
+
+                        <div class="info-box" style="margin-top: 20px;">
+                            <strong>Key Accessibility Features:</strong>
+                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                <li>Add alt text to all images and graphics</li>
+                                <li>Use built-in slide layouts for proper reading order</li>
+                                <li>Ensure sufficient color contrast</li>
+                                <li>Add captions to videos</li>
+                            </ul>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'googleslides': `
+                    <div class="result-section">
+                        <h2>📽️ Google Slides Accessibility</h2>
+                        <p>Use Grackle Slides to check and improve accessibility in your presentations.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>Recommended Tool:</h3>
+                            <p><strong>Grackle Slides</strong> - Accessibility checker for Google Slides</p>
+                            <a href="https://www.grackledocs.com/en/products-services/grackle-workspace/google-slides/" class="tool-link" target="_blank">
+                                📖 Grackle Slides Guide
+                            </a>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'excel': `
+                    <div class="result-section">
+                        <h2>📊 Microsoft Excel Accessibility</h2>
+                        <p>Use Excel's Accessibility Checker to make your spreadsheets accessible.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>Recommended Tool:</h3>
+                            <p><strong>Microsoft Office Accessibility Checker</strong> - Built into Excel</p>
+                            <a href="https://support.microsoft.com/en-us/office/improve-accessibility-with-the-accessibility-checker-a16f6de0-2f39-4a2b-8bd8-5ad801426c7f" class="tool-link" target="_blank">
+                                📖 Excel Accessibility Guide
+                            </a>
+                        </div>
+
+                        <div class="info-box" style="margin-top: 20px;">
+                            <strong>Spreadsheet Accessibility Tips:</strong>
+                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                <li>Define table headers clearly</li>
+                                <li>Use meaningful sheet names</li>
+                                <li>Add alt text to charts and graphics</li>
+                                <li>Avoid merged cells when possible</li>
+                                <li>Use sufficient color contrast</li>
+                            </ul>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'googlesheets': `
+                    <div class="result-section">
+                        <h2>📈 Google Sheets Accessibility</h2>
+                        <p>Use Grackle Sheets to check and improve accessibility in your spreadsheets.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>Recommended Tool:</h3>
+                            <p><strong>Grackle Sheets</strong> - Accessibility checker for Google Sheets</p>
+                            <a href="https://www.grackledocs.com/en/products-services/grackle-workspace/google-sheets/" class="tool-link" target="_blank">
+                                📖 Grackle Sheets Guide
+                            </a>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'textfile': `
+                    <div class="result-section">
+                        <h2>📃 Text & Markdown Accessibility</h2>
+                        <p>Text and Markdown files have inherent accessibility when properly structured.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>Guidelines & Best Practices:</h3>
+                            <p><strong>W3C Text Content Guidelines</strong></p>
+                            <a href="https://www.w3.org/TR/WCAG20-TECHS/text" class="tool-link" target="_blank">
+                                📖 W3C Guidelines
+                            </a>
+
+                            <div class="info-box" style="margin-top: 20px;">
+                                <strong>Recommendation:</strong> Use the accessibility checker for the platform where the text/markdown will be displayed (website builder, documentation tool, etc.).
+                            </div>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'website': `
+                    <div class="result-section">
+                        <h2><span aria-hidden="true">🌐</span> Website Accessibility</h2>
+                        <p>Use both built-in CMS tools and automated testing tools for comprehensive accessibility.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>Recommended Testing Tools:</h3>
+
+                            <p><strong>1. Browser Extensions (for all sites):</strong></p>
+                            <a href="https://accessibility.asu.edu/testing/web" class="tool-link" target="_blank">
+                                🔍 WAVE & Siteimprove Chrome Plugins
+                            </a>
+
+                            <p style="margin-top: 20px;"><strong>2. Platform-Specific Tools:</strong></p>
+                            <ul class="resources-list" style="margin-top: 15px;">
+                                <li>
+                                    <strong>Drupal</strong>
+                                    <a href="https://www.drupal.org/docs/getting-started/accessibility/how-to-do-an-accessibility-review" class="tool-link secondary" target="_blank">Guide</a>
+                                </li>
+                                <li>
+                                    <strong>Google Sites</strong>
+                                    <a href="https://support.google.com/sites/answer/7529116?hl=en" class="tool-link secondary" target="_blank">Guide</a>
+                                </li>
+                                <li>
+                                    <strong>Wix</strong>
+                                    <a href="https://support.wix.com/en/article/accessibility-checking-site-accessibility-with-the-accessibility-monitor" class="tool-link secondary" target="_blank">Guide</a>
+                                </li>
+                                <li>
+                                    <strong>WordPress</strong>
+                                    <a href="https://wordpress.org/plugins/accessibility-checker/" class="tool-link secondary" target="_blank">Plugin</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'pdf-source-known': `
+                    <div class="result-section">
+                        <h2>✅ Remediate from Source Document</h2>
+                        <p>Great! Since you know the source, you should remediate the original file first.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>Best Practice Workflow:</h3>
+                            <ol style="text-align: left; padding-left: 40px; margin: 20px 0; font-size: 1.1em;">
+                                <li style="margin: 15px 0;">Open the original source file (Word, PowerPoint, etc.)</li>
+                                <li style="margin: 15px 0;">Use the Accessibility Checker in that application</li>
+                                <li style="margin: 15px 0;">Fix all accessibility issues in the source</li>
+                                <li style="margin: 15px 0;">Export/Save as PDF with accessibility features enabled</li>
+                                <li style="margin: 15px 0;">Verify the PDF with our tool or Adobe Acrobat</li>
+                            </ol>
+
+                            <div class="warning-box" style="margin-top: 20px;">
+                                <strong>Important:</strong> Always remediate the source file, not the PDF. This makes updates easier and preserves accessibility better.
+                            </div>
+
+                            <a href="#" onclick="startOver(); return false;" class="tool-link" style="margin-top: 20px;">
+                                🔄 Find Tool for Source File Type
+                            </a>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'pdf-source-unknown': `
+                    <div class="result-section">
+                        <h2>📕 PDF Remediation Tools</h2>
+                        <p>Since the source is unknown, you'll need to remediate the PDF directly. We have tools to help!</p>
+
+                        <div class="tool-recommendation">
+                            <h3>🎓 New to PDF Remediation?</h3>
+                            <p>Start with our comprehensive training to learn manual remediation techniques:</p>
+                            <a href="/training" class="tool-link">
+                                📚 PDF Remediation Training (Recommended)
+                            </a>
+
+                            <h3 style="margin-top: 30px;">🔧 Quick Automated Remediation</h3>
+                            <p>Use our automated tool for faster processing:</p>
+                            <a href="/" class="tool-link secondary">
+                                ⚡ Automated PDF Remediation Tool
+                            </a>
+
+                            <h3 style="margin-top: 30px;">🛠️ Professional Tools</h3>
+                            <ul class="resources-list" style="margin-top: 15px;">
+                                <li>
+                                    <strong>Adobe Acrobat Pro</strong> - Industry standard for manual remediation
+                                    <a href="https://helpx.adobe.com/acrobat/using/create-verify-pdf-accessibility.html" class="tool-link secondary" target="_blank">Guide</a>
+                                </li>
+                                <li>
+                                    <strong>Equidox</strong> - Automated PDF remediation service
+                                    <a href="https://accessibility.asu.edu/articles/equidox" class="tool-link secondary" target="_blank">ASU Guide</a>
+                                </li>
+                                <li>
+                                    <strong>Grackle</strong> - PDF accessibility checker
+                                    <a href="https://www.grackledocs.com/en/check-a-document/" class="tool-link secondary" target="_blank">Try Grackle</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="info-box" style="margin-top: 20px;">
+                            <strong>💡 Recommended Path:</strong>
+                            <ol style="padding-left: 20px; margin-top: 10px;">
+                                <li>Complete our <a href="/training" style="color: #8C1D40; font-weight: bold;">PDF Remediation Training</a></li>
+                                <li>Use our <a href="/" style="color: #8C1D40; font-weight: bold;">automated tool</a> for quick fixes</li>
+                                <li>Manually review and refine using Adobe Acrobat Pro</li>
+                            </ol>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="/training" class="btn btn-primary">📚 Start Training</a>
+                            <a href="/" class="btn btn-primary">🔧 Use Tool</a>
+                        </div>
+                    </div>
+                `,
+
+                'pdf-scanned': `
+                    <div class="result-section">
+                        <h2>🖨️ Scanned PDF Remediation</h2>
+                        <p>Scanned PDFs require OCR (Optical Character Recognition) before remediation.</p>
+
+                        <div class="warning-box">
+                            <strong>⚠️ Important:</strong> Scanned PDFs are images, not text. You must run OCR first to make them accessible.
+                        </div>
+
+                        <div class="tool-recommendation">
+                            <h3>Step 1: Run OCR</h3>
+                            <p><strong>Adobe Acrobat Pro:</strong> Tools → Enhance Scans → Recognize Text → In This File</p>
+
+                            <h3 style="margin-top: 30px;">Step 2: Learn Remediation</h3>
+                            <p>After OCR, follow our comprehensive training:</p>
+                            <a href="/training" class="tool-link">
+                                📚 PDF Remediation Training
+                            </a>
+
+                            <h3 style="margin-top: 30px;">Step 3: Use Tools</h3>
+                            <ul class="resources-list" style="margin-top: 15px;">
+                                <li>
+                                    <strong>Our Automated Tool</strong> - Quick automated fixes
+                                    <a href="/" class="tool-link secondary">Try Tool</a>
+                                </li>
+                                <li>
+                                    <strong>Adobe Acrobat Pro</strong> - Complete manual control
+                                    <a href="https://helpx.adobe.com/acrobat/using/create-verify-pdf-accessibility.html" class="tool-link secondary" target="_blank">Guide</a>
+                                </li>
+                                <li>
+                                    <strong>Equidox</strong> - Professional service for complex scans
+                                    <a href="https://accessibility.asu.edu/articles/equidox" class="tool-link secondary" target="_blank">Learn More</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="/training" class="btn btn-primary">📚 Start Training</a>
+                        </div>
+                    </div>
+                `,
+
+                'video-published': `
+                    <div class="result-section">
+                        <h2>📺 Published Video/Audio Accessibility</h2>
+                        <p>For publicly published media, use professional transcription services.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>Recommended Service:</h3>
+                            <p><strong>REV</strong> - Professional transcription for published content</p>
+                            <a href="https://www.rev.com/" class="tool-link" target="_blank">
+                                🎬 Try REV
+                            </a>
+
+                            <div class="info-box" style="margin-top: 20px;">
+                                <strong>Why REV?</strong> REV provides high-quality human transcription and captions that meet accessibility standards for published content.
+                            </div>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'video-unpublished': `
+                    <div class="result-section">
+                        <h2>🎥 Unpublished Video/Audio Accessibility</h2>
+                        <p>For unpublished media on your computer, use AI-powered transcription tools.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>Recommended Tools:</h3>
+
+                            <ul class="resources-list">
+                                <li>
+                                    <strong>AI Transcription Tool</strong> - ASU's automated transcription
+                                    <a href="https://asu-grading-backend.ea.asu.edu/transcript" class="tool-link secondary" target="_blank">Try Tool</a>
+                                </li>
+                                <li>
+                                    <strong>Media+</strong> - ASU's media hosting with transcription
+                                    <a href="https://mediaplus.asu.edu/" class="tool-link secondary" target="_blank">Media+</a>
+                                </li>
+                                <li>
+                                    <strong>Wistia</strong> - Video hosting with accessibility features
+                                    <a href="https://wistia.com/" class="tool-link secondary" target="_blank">Wistia</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'image': `
+                    <div class="result-section">
+                        <h2>🖼️ Image Accessibility</h2>
+                        <p>Make images accessible by adding descriptive alternative text.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>Recommended Tool:</h3>
+                            <p><strong>ASU Image Accessibility Creator</strong> - AI-powered alt text generation</p>
+                            <a href="https://asuo-ai-labs.streamlit.app/Image_Accessibility" class="tool-link" target="_blank">
+                                🖼️ Create Alt Text
+                            </a>
+
+                            <div class="info-box" style="margin-top: 20px;">
+                                <strong>Alt Text Best Practices:</strong>
+                                <ul style="padding-left: 20px; margin-top: 10px;">
+                                    <li>Describe the purpose and content of the image</li>
+                                    <li>Keep it concise (usually under 125 characters)</li>
+                                    <li>Don't start with "Image of..." or "Picture of..."</li>
+                                    <li>For decorative images, use empty alt text (alt="")</li>
+                                    <li>For complex images, provide a longer description nearby</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'canvas': `
+                    <div class="result-section">
+                        <h2>🎓 Canvas Course Accessibility</h2>
+                        <p>Use FRAME, Ally, and Claude Canvas Accessibility Checker to ensure your Canvas course is accessible.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>Recommended Tools:</h3>
+
+                            <ul class="resources-list">
+                                <li>
+                                    <strong>FRAME</strong> - ASU's Faculty Resources for Accessible Materials & Education
+                                    <a href="https://accessibility.asu.edu/asu-accessibility/faculty-resources-frame" class="tool-link secondary" target="_blank">FRAME Resources</a>
+                                </li>
+                                <li>
+                                    <strong>Ally</strong> - Automated accessibility checker for Canvas
+                                    <a href="https://lx.asu.edu/ally" class="tool-link secondary" target="_blank">Ally Guide</a>
+                                </li>
+                                <li>
+                                    <strong>Claude Canvas Accessibility Checker</strong> - AI-powered comprehensive accessibility analysis
+                                    <a href="/" class="tool-link secondary">Try Claude Checker</a>
+                                </li>
+                                <li>
+                                    <strong>Canvas Accessibility Checker</strong> - Built-in Rich Content Editor checker
+                                    <a href="https://community.instructure.com/en/kb/articles/662936-how-do-i-use-the-accessibility-checker-in-the-rich-content-editor" class="tool-link secondary" target="_blank">Canvas Guide</a>
+                                </li>
+                            </ul>
+
+                            <div class="info-box" style="margin-top: 20px;">
+                                <strong>💡 Recommended Workflow:</strong>
+                                <ol style="padding-left: 20px; margin-top: 10px;">
+                                    <li>Start with FRAME for accessibility best practices</li>
+                                    <li>Use Ally to identify and fix document issues</li>
+                                    <li>Run Claude Canvas Accessibility Checker for comprehensive course analysis</li>
+                                    <li>Use Canvas built-in checker for Rich Content Editor content</li>
+                                    <li>Work with your instructional designer for comprehensive review</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'articulate': `
+                    <div class="result-section">
+                        <h2>🎬 Articulate 360 Accessibility</h2>
+                        <p>Use Articulate's built-in accessibility checker for Rise and Storyline courses.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>Recommended Resources:</h3>
+
+                            <p><strong>Articulate 360 Accessibility Checker</strong></p>
+                            <a href="https://community.articulate.com/discussions/discuss/accessibility-checker/1224733" class="tool-link" target="_blank">
+                                📖 Articulate Accessibility Guide
+                            </a>
+
+                            <div class="info-box" style="margin-top: 20px;">
+                                <strong>Key Features:</strong>
+                                <ul style="padding-left: 20px; margin-top: 10px;">
+                                    <li>Built-in accessibility checker in Rise and Storyline</li>
+                                    <li>Keyboard navigation support</li>
+                                    <li>Screen reader compatibility</li>
+                                    <li>Focus order management</li>
+                                    <li>Alt text for images and graphics</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'other-lms': `
+                    <div class="result-section">
+                        <h2>💻 Learning Management System Accessibility</h2>
+                        <p>Use FRAME, Ally, and platform-specific tools for course accessibility.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>General Resources:</h3>
+
+                            <ul class="resources-list">
+                                <li>
+                                    <strong>FRAME</strong> - ASU accessibility resources
+                                    <a href="https://accessibility.asu.edu/asu-accessibility/faculty-resources-frame" class="tool-link secondary" target="_blank">FRAME</a>
+                                </li>
+                                <li>
+                                    <strong>Ally</strong> - Multi-platform accessibility
+                                    <a href="https://lx.asu.edu/ally" class="tool-link secondary" target="_blank">Ally</a>
+                                </li>
+                            </ul>
+
+                            <h3 style="margin-top: 30px;">Platform-Specific Tools:</h3>
+
+                            <ul class="resources-list">
+                                <li>
+                                    <strong>Moodle</strong>
+                                    <a href="https://moodle.com/functionality-with-moodle/moodle-accessibility/" class="tool-link secondary" target="_blank">Moodle Guide</a>
+                                </li>
+                                <li>
+                                    <strong>WAVE & Siteimprove</strong> - For individual pages
+                                    <a href="https://accessibility.asu.edu/testing/web" class="tool-link secondary" target="_blank">Testing Tools</a>
+                                </li>
+                            </ul>
+
+                            <div class="warning-box" style="margin-top: 20px;">
+                                <strong>Recommendation:</strong> Work with your instructional designer who is in charge of the course for comprehensive accessibility support.
+                            </div>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `
+            };
+
+            return results[type] || '<p>Result not found</p>';
+        }
+
+        function startOver() {
+            // Reset everything
+            currentPath = ['Start'];
+            updateBreadcrumb();
+            updateProgress(1);
+
+            // Hide all sections
+            document.querySelectorAll('.question-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show first question
+            document.getElementById('q1').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

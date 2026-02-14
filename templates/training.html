@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Remediation Training - Manual Accessibility Fixes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, 'Nimbus Sans L', 'Liberation Sans', FreeSans, sans-serif;
+            line-height: 1.6;
+            color: #000000;
+            background: linear-gradient(135deg, #8C1D40 0%, #FFC627 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8C1D40 0%, #FFC627 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: white;
+            color: #8C1D40;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .content {
+            padding: 50px 40px;
+        }
+
+        .intro-section {
+            background: #f8f9fa;
+            border-left: 5px solid #8C1D40;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 10px;
+        }
+
+        .intro-section h2 {
+            color: #8C1D40;
+            margin-bottom: 15px;
+        }
+
+        .intro-section ul {
+            padding-left: 25px;
+        }
+
+        .intro-section li {
+            margin: 10px 0;
+            font-size: 1.05em;
+        }
+
+        .progress-bar {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 20px 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            display: none;
+        }
+
+        .progress-bar.visible {
+            display: block;
+        }
+
+        .progress-fill {
+            height: 8px;
+            background: linear-gradient(90deg, #8C1D40 0%, #FFC627 100%);
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #8C1D40;
+        }
+
+        .step-section {
+            margin-bottom: 50px;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            position: relative;
+            border-left: 6px solid #8C1D40;
+        }
+
+        .step-section.completed {
+            border-left-color: #27ae60;
+            background: #d4edda;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            background: #8C1D40;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.4em;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .step-section.completed .step-number {
+            background: #27ae60;
+        }
+
+        .step-section.completed .step-number::after {
+            content: "✓";
+            position: absolute;
+        }
+
+        .step-title {
+            color: #8C1D40;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-top: 10px;
+        }
+
+        .step-content {
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        .step-content p {
+            margin-bottom: 15px;
+        }
+
+        .step-content ul, .step-content ol {
+            padding-left: 30px;
+            margin: 15px 0;
+        }
+
+        .step-content li {
+            margin: 10px 0;
+        }
+
+        .image-placeholder {
+            background: white;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .image-placeholder img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .image-placeholder .caption {
+            margin-top: 15px;
+            color: #747474;
+            font-style: italic;
+            font-size: 0.95em;
+        }
+
+        .important-note {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .important-note strong {
+            color: #856404;
+        }
+
+        .success-note {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 5px solid #17a2b8;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .tip-box::before {
+            content: "💡 Pro Tip: ";
+            font-weight: bold;
+            color: #0c5460;
+        }
+
+        .complete-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 30px auto 0 auto;
+        }
+
+        .complete-btn:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .complete-btn.completed {
+            background: #6c757d;
+            cursor: default;
+        }
+
+        .quick-nav {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 50;
+        }
+
+        .quick-nav h3 {
+            color: #8C1D40;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .quick-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .quick-nav li {
+            margin: 10px 0;
+        }
+
+        .quick-nav a {
+            color: #000000;
+            text-decoration: none;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: all 0.2s;
+            font-size: 0.95em;
+        }
+
+        .quick-nav a:hover {
+            background: #f8f9fa;
+            color: #8C1D40;
+            transform: translateX(5px);
+        }
+
+        .quick-nav a.completed {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .summary-section {
+            background: linear-gradient(135deg, #8C1D40 0%, #FFC627 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .summary-section h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .summary-section p {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            opacity: 0.95;
+        }
+
+        .certificate-box {
+            background: white;
+            color: #000000;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px auto;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .certificate-box h3 {
+            color: #8C1D40;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .checklist {
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .checklist-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-left: 4px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checklist-item:hover {
+            border-left-color: #8C1D40;
+            transform: translateX(5px);
+        }
+
+        .checklist-item.checked {
+            border-left-color: #27ae60;
+            background: #d4edda;
+            text-decoration: line-through;
+            opacity: 0.8;
+        }
+
+        .footer {
+            background: #000000;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        @media (max-width: 1024px) {
+            .quick-nav {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .step-section {
+                padding: 30px 20px;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+        }
+
+        .toggle-nav {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #8C1D40;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+
+        @media (max-width: 1024px) {
+            .toggle-nav {
+                display: block;
+            }
+
+            .quick-nav.mobile-visible {
+                display: block;
+            }
+        }
+
+        /* WCAG 2.2 AA Accessibility Improvements */
+
+        /* Skip Link for Keyboard/Screen Reader Users */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #8C1D40;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            z-index: 1000;
+            border-radius: 0 0 8px 0;
+        }
+
+        .skip-link:focus {
+            top: 0;
+            outline: 3px solid #FFC627;
+            outline-offset: 2px;
+        }
+
+        /* Focus Indicators for All Interactive Elements (WCAG 2.4.7) */
+        a:focus,
+        button:focus,
+        .nav-btn:focus,
+        .complete-btn:focus,
+        .quick-nav a:focus {
+            outline: 3px solid #FFC627;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 5px rgba(255, 198, 39, 0.3);
+        }
+
+        /* High Contrast Focus for Buttons */
+        .complete-btn:focus {
+            outline-color: #FFC627;
+            outline-width: 3px;
+            outline-offset: 3px;
+        }
+
+        /* Ensure Focus Visible on Dark Backgrounds */
+        .header a:focus,
+        .summary-section a:focus {
+            outline: 3px solid white;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip Navigation Link for Keyboard/Screen Reader Users (WCAG 2.4.1) -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="container">
+        <header class="header" role="banner">
+            <h1><span aria-hidden="true">🎓</span> PDF Remediation Training</h1>
+            <p>Master Manual Accessibility Fixes with Adobe Acrobat</p>
+            <nav aria-label="Page navigation">
+                <div class="nav-buttons">
+                    <a href="index.html" class="nav-btn"><span aria-hidden="true">🏠</span> Home</a>
+                    <a href="#summary" class="nav-btn">📋 Summary</a>
+                </div>
+            </nav>
+        </header>
+
+        <div class="progress-bar" id="progressBar" role="region" aria-label="Training progress">
+            <div class="progress-fill" id="progressFill" style="width: 0%" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Training completion percentage"></div>
+            <div class="progress-text" id="progressText" aria-live="polite">0% Complete</div>
+        </div>
+
+        <main class="content" id="main-content" role="main">
+            <!-- Introduction -->
+            <div class="intro-section">
+                <h2><span aria-hidden="true">📚</span> Welcome to PDF Remediation Training</h2>
+                <p>This training will teach you how to manually remediate PDFs for accessibility using Adobe Acrobat. While our automated tool handles many issues, understanding manual remediation helps you:</p>
+                <ul>
+                    <li><strong>Handle complex documents</strong> that need expert review</li>
+                    <li><strong>Fix specialized issues</strong> the automated tool can't address</li>
+                    <li><strong>Understand accessibility principles</strong> deeply</li>
+                    <li><strong>Verify and test</strong> automated remediation results</li>
+                    <li><strong>Become an accessibility expert</strong> for your team</li>
+                </ul>
+                <div class="success-note" style="margin-top: 20px;">
+                    <strong>📄 Practice Document:</strong> Follow along with this training using our <a href="https://drive.google.com/file/d/1nXs7dW7i6CryMYdNMCxKlaql9iICwm3P/view?usp=drive_link" target="_blank" rel="noopener noreferrer" style="color: #8C1D40; font-weight: bold; text-decoration: underline;">sample PDF document</a>. This document contains the same accessibility issues shown in the training screenshots, so you can practice each step hands-on.
+                </div>
+                <div class="tip-box" style="margin-top: 20px;">
+                    <strong>Estimated Time:</strong> 30-45 minutes | <strong>Difficulty:</strong> Intermediate | <strong>Software Required:</strong> Adobe Acrobat Pro DC
+                </div>
+            </div>
+
+            <!-- SECTION 1: Open & Check PDF (Steps 1-4) -->
+
+            <!-- Step 1: Open PDF and Find Accessibility Checker -->
+            <div class="step-section" data-step="1">
+                <div class="step-number">1</div>
+                <h2 class="step-title">Open PDF and Find Accessibility Checker</h2>
+                <div class="step-content">
+                    <p><strong>Let's begin by opening your PDF and locating the Accessibility Checker tool.</strong></p>
+
+                    <ol>
+                        <li>Open your PDF in <strong>Adobe Acrobat Pro DC</strong></li>
+                        <li>Find the Accessibility Checker using one of these methods:
+                            <ul>
+                                <li><strong>Search method:</strong> Use the search tool in the upper right (Command+F or Ctrl+F) and search for "accessibility checker"</li>
+                                <li><strong>Menu method:</strong> Navigate to <strong>Tools → Prepare for Accessibility → Accessibility Checker</strong></li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step1.png" alt="Accessibility Checker location in Adobe Acrobat showing search tool and Prepare for Accessibility option">
+                        <div class="caption">Finding the Accessibility Checker in Adobe Acrobat Pro DC</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Pro Tip:</strong> Consider creating a duplicate of your document before starting remediation. This gives you an original backup in case the remediation process doesn't go as planned.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(1)<span aria-hidden="true">✓</span> Mark Step 1 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Run the Accessibility Checker -->
+            <div class="step-section" data-step="2">
+                <div class="step-number">2</div>
+                <h2 class="step-title">Run the Accessibility Checker</h2>
+                <div class="step-content">
+                    <p><strong>Now we'll run the checker to identify all accessibility issues in the document.</strong></p>
+
+                    <ol>
+                        <li>Once you've found the Accessibility Checker, click <strong>"Start Checking"</strong></li>
+                        <li>Wait for the tool to analyze your document (this usually takes a few seconds)</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step2.png" alt="Start Checking button in Accessibility Checker interface">
+                        <div class="caption">Click "Start Checking" to begin the accessibility analysis</div>
+                    </div>
+
+                    <div class="important-note">
+                        <strong>What Happens Next:</strong> The accessibility checker will scan your entire PDF and generate a report showing all issues that need to be fixed. Don't worry if you see many issues - we'll address them systematically!
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(2)<span aria-hidden="true">✓</span> Mark Step 2 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 3: View the Accessibility Report (Closed) -->
+            <div class="step-section" data-step="3">
+                <div class="step-number">3</div>
+                <h2 class="step-title">View the Accessibility Report</h2>
+                <div class="step-content">
+                    <p><strong>The report will appear showing accessibility issues organized in categories.</strong></p>
+
+                    <p>When the report first appears, all the issue categories are collapsed (closed). You'll see bolded field names with disclosure triangles next to them.</p>
+
+                    <div class="image-placeholder">
+                        <img src="images/step3a.png" alt="Accessibility Report showing closed dropdown menus with collapsed issue categories">
+                        <div class="caption">Accessibility Report with closed dropdown menus</div>
+                    </div>
+
+                    <div class="important-note">
+                        <strong>Understanding the Report Colors:</strong>
+                        <ul style="margin-top: 10px;">
+                            <li><span style="color: #e74c3c; font-size: 1.2em;" aria-hidden="true">✖</span> <strong>Red (Failed):</strong> Critical issues that must be fixed for accessibility</li>
+                            <li><span style="color: #f39c12; font-size: 1.2em;" aria-hidden="true">⚠</span> <strong>Yellow (Needs Manual Check):</strong> Items requiring human review and judgment</li>
+                            <li><span style="color: #27ae60; font-size: 1.2em;" aria-hidden="true">✓</span> <strong>Green (Passed):</strong> Requirements that are already met</li>
+                        </ul>
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(3)<span aria-hidden="true">✓</span> Mark Step 3 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Open the Dropdown Menus -->
+            <div class="step-section" data-step="4">
+                <div class="step-number">4</div>
+                <h2 class="step-title">Open the Dropdown Menus</h2>
+                <div class="step-content">
+                    <p><strong>Expand each bolded field to see the specific issues within each category.</strong></p>
+
+                    <ol>
+                        <li>Click on each bolded field name to expand it into a dropdown menu</li>
+                        <li>Review the specific issues listed under each category</li>
+                        <li>Don't be overwhelmed! We'll fix them one by one</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step3b.png" alt="Accessibility Report showing opened dropdown menus with expanded issue details">
+                        <div class="caption">Accessibility Report with opened dropdown menus showing all issues</div>
+                    </div>
+
+                    <div class="success-note">
+                        <strong>You're Ready to Start Fixing!</strong> Now that you can see all the issues, we'll systematically work through them. Most issues can be fixed with just a few clicks.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(4)<span aria-hidden="true">✓</span> Mark Step 4 Complete</button>
+                </div>
+            </div>
+
+            <!-- SECTION 2: Fix Tagging (Step 5) -->
+
+            <!-- Step 5: Fix Tagged PDF -->
+            <div class="step-section" data-step="5">
+                <div class="step-number">5</div>
+                <h2 class="step-title">Fix "Tagged PDF - Failed"</h2>
+                <div class="step-content">
+                    <p><strong>This is the most critical fix - adding tags provides the structure that screen readers need to navigate your document.</strong></p>
+
+                    <ol>
+                        <li>Scroll to the top of the accessibility issues list</li>
+                        <li>Look for <strong>"Tagged PDF - Failed"</strong></li>
+                        <li><strong>Right-click</strong> on "Tagged PDF - Failed"</li>
+                        <li>Select <strong>"Fix"</strong> from the dropdown menu</li>
+                        <li>Acrobat will automatically add tags to your document</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step4.png" alt="Right-clicking on Tagged PDF Failed showing Fix option in context menu">
+                        <div class="caption">Select "Fix" to automatically add tags to the PDF</div>
+                    </div>
+
+                    <div class="success-note">
+                        <strong>🎉 Major Progress!</strong> Once you fix the tagging, you'll notice that a majority of the accessibility issues are automatically resolved! Tags provide the document structure that makes content accessible to screen readers.
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Save Your Work:</strong> Consider saving your document frequently to ensure you don't lose your remediation work. Use Command+S (Mac) or Ctrl+S (Windows) after each major fix.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(5)<span aria-hidden="true">✓</span> Mark Step 5 Complete</button>
+                </div>
+            </div>
+
+            <!-- SECTION 3: Add Alt Text to Images (Steps 6-10) -->
+
+            <!-- Step 6: Look at Alternate Text Missing -->
+            <div class="step-section" data-step="6">
+                <div class="step-number">6</div>
+                <h2 class="step-title">Find Missing Alternate Text</h2>
+                <div class="step-content">
+                    <p><strong>Alt text describes images for screen reader users. Let's identify which images need descriptions.</strong></p>
+
+                    <ol>
+                        <li>In the Accessibility Report, look for <strong>"Alternate Text"</strong> section</li>
+                        <li>Expand it by clicking on the disclosure triangle</li>
+                        <li>Open <strong>"Figures alternate Text - Failed"</strong></li>
+                        <li>You'll see a list of figures (images) that need alt text</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step5.png" alt="Accessibility report showing Alternate Text section with Figures alternate Text Failed expanded">
+                        <div class="caption">Finding missing alternate text in the accessibility report</div>
+                    </div>
+
+                    <div class="important-note">
+                        <strong>Why Alt Text Matters:</strong> Screen readers announce images using alt text. Without it, blind users miss important visual information. Good alt text is concise but descriptive.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(6)<span aria-hidden="true">✓</span> Mark Step 6 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 7: Right Click to Add Alt Text -->
+            <div class="step-section" data-step="7">
+                <div class="step-number">7</div>
+                <h2 class="step-title">Start Adding Alt Text</h2>
+                <div class="step-content">
+                    <p><strong>We'll add alt text to each image that needs it.</strong></p>
+
+                    <ol>
+                        <li>In the issues list, find <strong>"Figure 1"</strong> (or the first figure listed)</li>
+                        <li><strong>Right-click</strong> on "Figure 1"</li>
+                        <li>Select <strong>"Fix"</strong> from the dropdown menu</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step6.png" alt="Right-clicking on Figure 1 showing Fix option to add alt text">
+                        <div class="caption">Select "Fix" to open the alt text editor</div>
+                    </div>
+
+                    <p><strong>What Happens Next:</strong> A pop-up dialog will appear that lets you add or edit the alternate text for this image.</p>
+
+                    <button class="complete-btn" onclick="markStepComplete(7)<span aria-hidden="true">✓</span> Mark Step 7 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 8: View the Alt Text Popup -->
+            <div class="step-section" data-step="8">
+                <div class="step-number">8</div>
+                <h2 class="step-title">View the Alt Text Dialog</h2>
+                <div class="step-content">
+                    <p><strong>The alt text editor shows you which image you're describing.</strong></p>
+
+                    <p>When the alt text dialog opens, you'll notice:</p>
+                    <ul>
+                        <li>The image in question is <strong>highlighted</strong> in the document</li>
+                        <li>A text field where you can enter the description</li>
+                        <li>A checkbox to mark the image as decorative (if it's purely visual)</li>
+                    </ul>
+
+                    <div class="image-placeholder">
+                        <img src="images/step7.png" alt="Alt text dialog box with the Learning Enterprise logo highlighted in the document behind it">
+                        <div class="caption">Alt text popup with highlighted image (in this case, the Learning Enterprise logo)</div>
+                    </div>
+
+                    <div class="important-note">
+                        <strong>Identifying the Image:</strong> The highlighting helps you confirm which image you're describing. In this example, it's the Learning Enterprise logo at the bottom right side of the document.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(8)<span aria-hidden="true">✓</span> Mark Step 8 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 9: Write Alt Text or Mark Decorative -->
+            <div class="step-section" data-step="9">
+                <div class="step-number">9</div>
+                <h2 class="step-title">Write Alt Text or Mark Decorative</h2>
+                <div class="step-content">
+                    <p><strong>Now you'll add a description or mark the image as decorative.</strong></p>
+
+                    <ol>
+                        <li>In the alt text field, type a concise description of the image</li>
+                        <li><strong>OR</strong> if the image is purely decorative (adds no meaningful content), check <strong>"Decorative Figure"</strong></li>
+                        <li>Click <strong>"Save & Close"</strong></li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step8.png" alt="Alt text dialog showing text field with example alt text and Save and Close button">
+                        <div class="caption">Writing alt text and clicking Save & Close</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Writing Good Alt Text:</strong>
+                        <ul style="margin-top: 10px;">
+                            <li><strong>Be concise:</strong> Aim for one sentence, usually under 125 characters</li>
+                            <li><strong>Be descriptive:</strong> Describe what's important about the image in context</li>
+                            <li><strong>Don't start with "Image of...":</strong> Screen readers already announce it's an image</li>
+                            <li><strong>Consider context:</strong> Is this image important for understanding the content? If yes, describe it. If it's purely decorative, mark it as such.</li>
+                        </ul>
+                    </div>
+
+                    <div class="important-note">
+                        <strong>When to Mark as Decorative:</strong> Use "Decorative Figure" for images that are purely visual (borders, dividers, design elements) or when the content is fully described in surrounding text. Example: A photo of a document next to text that fully explains the document's content.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(9)<span aria-hidden="true">✓</span> Mark Step 9 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 10: Verify Alt Text Is Added -->
+            <div class="step-section" data-step="10">
+                <div class="step-number">10</div>
+                <h2 class="step-title">Verify Alt Text Warning Is Gone</h2>
+                <div class="step-content">
+                    <p><strong>Check that the alt text issue has been resolved for this image.</strong></p>
+
+                    <p>After saving the alt text:</p>
+                    <ul>
+                        <li>The warning for that specific figure disappears from the accessibility report</li>
+                        <li>If there are more images needing alt text, repeat steps 7-9 for each one</li>
+                        <li>Continue until all "Figures alternate Text - Failed" issues are resolved</li>
+                    </ul>
+
+                    <div class="image-placeholder">
+                        <img src="images/step9.png" alt="Accessibility report showing the alt text warning has been removed">
+                        <div class="caption">Alt text warning is now gone from the report</div>
+                    </div>
+
+                    <div class="success-note">
+                        <strong>Great Work!</strong> You've made your images accessible to screen reader users. Next, we'll tackle table accessibility.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(10)<span aria-hidden="true">✓</span> Mark Step 10 Complete</button>
+                </div>
+            </div>
+
+            <!-- SECTION 4: Fix Tables (Steps 11-19) -->
+
+            <!-- Step 11: Open Reading Order Tool -->
+            <div class="step-section" data-step="11">
+                <div class="step-number">11</div>
+                <h2 class="step-title">Open the Reading Order Tool</h2>
+                <div class="step-content">
+                    <p><strong>Tables need proper headers and summaries for screen readers. Let's start by opening the Reading Order tool.</strong></p>
+
+                    <ol>
+                        <li>In the accessibility menu, find and click <strong>"Fix reading order"</strong></li>
+                        <li>Or navigate to <strong>Tools → Accessibility → Reading Order</strong></li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step10.png" alt="Fix reading order option in the accessibility tools menu">
+                        <div class="caption">Opening the Reading Order tool from accessibility options</div>
+                    </div>
+
+                    <div class="important-note">
+                        <strong>What Is Reading Order?</strong> The Reading Order tool lets you see how content is structured and tagged in your PDF. It's essential for fixing tables and ensuring content is read in the correct sequence by screen readers.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(11)<span aria-hidden="true">✓</span> Mark Step 11 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 12: View Reading Order Panel -->
+            <div class="step-section" data-step="12">
+                <div class="step-number">12</div>
+                <h2 class="step-title">View the Reading Order Panel</h2>
+                <div class="step-content">
+                    <p><strong>The Reading Order tool will open as a panel showing tags on your document elements.</strong></p>
+
+                    <p>You'll see:</p>
+                    <ul>
+                        <li>A panel on the right side of the screen</li>
+                        <li>Numbered boxes overlaid on your document showing the reading order</li>
+                        <li>Different colors indicating different element types (text, images, tables, etc.)</li>
+                    </ul>
+
+                    <div class="image-placeholder">
+                        <img src="images/step11.png" alt="Reading Order panel showing document with numbered tag boxes">
+                        <div class="caption">Reading Order panel displays with tags visible on document elements</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Understanding the Tags:</strong> Each numbered box represents a content element. The numbers show the order in which screen readers will announce the content.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(12)<span aria-hidden="true">✓</span> Mark Step 12 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 13: Select Table and Right Click -->
+            <div class="step-section" data-step="13">
+                <div class="step-number">13</div>
+                <h2 class="step-title">Select the Table Tag</h2>
+                <div class="step-content">
+                    <p><strong>Now we'll select the table that needs fixing.</strong></p>
+
+                    <ol>
+                        <li>Look for the numbered tag box that covers your table</li>
+                        <li>Click on that tag box - the table will be highlighted in <strong>blue</strong></li>
+                        <li><strong>Right-click</strong> on the highlighted table</li>
+                        <li>A context menu will appear with table editing options</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step12.png" alt="Table highlighted in blue with right-click context menu showing table editing options">
+                        <div class="caption">Table selected and highlighted, with context menu open</div>
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(13)<span aria-hidden="true">✓</span> Mark Step 13 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 14: Edit Table Summary -->
+            <div class="step-section" data-step="14">
+                <div class="step-number">14</div>
+                <h2 class="step-title">Add Table Summary</h2>
+                <div class="step-content">
+                    <p><strong>A table summary provides context about what the table contains and its purpose.</strong></p>
+
+                    <ol>
+                        <li>From the context menu, select <strong>"Edit Table Summary"</strong></li>
+                        <li>A dialog box will open</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step13.png" alt="Context menu with Edit Table Summary option highlighted">
+                        <div class="caption">Select "Edit Table Summary" from the menu</div>
+                    </div>
+
+                    <div class="important-note">
+                        <strong>Why Table Summaries Matter:</strong> Screen readers announce the table summary before reading the table contents. This helps users understand the table's purpose and decide if they want to navigate through it. It's like a caption that explains what the table is about.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(14)<span aria-hidden="true">✓</span> Mark Step 14 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 15: Write Table Summary Text -->
+            <div class="step-section" data-step="15">
+                <div class="step-number">15</div>
+                <h2 class="step-title">Write the Table Summary</h2>
+                <div class="step-content">
+                    <p><strong>Write a brief description of what the table contains.</strong></p>
+
+                    <ol>
+                        <li>In the Table Summary dialog, type a concise description</li>
+                        <li>Describe what information the table presents and its organization</li>
+                        <li>Click <strong>"OK"</strong> to save</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step14.png" alt="Table Summary dialog box with text field and OK button">
+                        <div class="caption">Enter a descriptive table summary and click OK</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Writing Good Table Summaries:</strong>
+                        <ul style="margin-top: 10px;">
+                            <li><strong>Be concise:</strong> One or two sentences usually suffice</li>
+                            <li><strong>Describe the data:</strong> What information does the table present?</li>
+                            <li><strong>Note organization:</strong> How is the data arranged? (by rows, columns, categories)</li>
+                            <li><strong>Example:</strong> "Course schedule showing class times, locations, and instructors organized by day of the week"</li>
+                        </ul>
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(15)<span aria-hidden="true">✓</span> Mark Step 15 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 16: Open Table Editor for Headers -->
+            <div class="step-section" data-step="16">
+                <div class="step-number">16</div>
+                <h2 class="step-title">Open Table Editor to Fix Headers</h2>
+                <div class="step-content">
+                    <p><strong>Now we'll define which cells are headers so screen readers can announce them correctly.</strong></p>
+
+                    <ol>
+                        <li><strong>Right-click</strong> on the table again (the same way you did before)</li>
+                        <li>From the context menu, select <strong>"Table Editor"</strong></li>
+                        <li>The table editor mode will activate</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step15.png" alt="Right-click context menu showing Table Editor option">
+                        <div class="caption">Select "Table Editor" to begin defining table headers</div>
+                    </div>
+
+                    <div class="important-note">
+                        <strong>Why Table Headers Matter:</strong> When screen readers announce table data, they also announce the relevant headers for each cell. This provides context for what each data point represents. Without proper headers, users hear disconnected data without understanding what it means.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(16)<span aria-hidden="true">✓</span> Mark Step 16 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 17: Table Highlighted in Pink -->
+            <div class="step-section" data-step="17">
+                <div class="step-number">17</div>
+                <h2 class="step-title">Table Editor Mode Activated</h2>
+                <div class="step-content">
+                    <p><strong>When Table Editor mode is active, the table will be highlighted in pink.</strong></p>
+
+                    <p>Visual indicators:</p>
+                    <ul>
+                        <li>The entire table is now highlighted in <strong>pink/magenta</strong></li>
+                        <li>Individual cells are clearly outlined</li>
+                        <li>You can now right-click on individual cells to set their properties</li>
+                    </ul>
+
+                    <div class="image-placeholder">
+                        <img src="images/step16.png" alt="Table highlighted in pink showing Table Editor mode is active">
+                        <div class="caption">Table highlighted in pink - ready to edit header properties</div>
+                    </div>
+
+                    <div class="success-note">
+                        <strong>You're Ready!</strong> The pink highlighting indicates you can now edit table cell properties. Next, we'll define which cells are headers.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(17)<span aria-hidden="true">✓</span> Mark Step 17 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 18: Right Click Cell for Properties -->
+            <div class="step-section" data-step="18">
+                <div class="step-number">18</div>
+                <h2 class="step-title">Open Cell Properties</h2>
+                <div class="step-content">
+                    <p><strong>We'll start by defining the first header cell.</strong></p>
+
+                    <ol>
+                        <li>Find the <strong>top-left cell</strong> of your table (usually the first header)</li>
+                        <li><strong>Right-click</strong> on that cell</li>
+                        <li>Select <strong>"Table Cell Properties"</strong> from the menu</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step17.png" alt="Right-clicking on table cell showing Table Cell Properties option">
+                        <div class="caption">Right-click on a cell and select "Table Cell Properties"</div>
+                    </div>
+
+                    <p><strong>What's Next:</strong> The Table Cell Properties dialog will open, allowing you to designate this cell as a header.</p>
+
+                    <button class="complete-btn" onclick="markStepComplete(18)<span aria-hidden="true">✓</span> Mark Step 18 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 19: Set Header Cell Properties -->
+            <div class="step-section" data-step="19">
+                <div class="step-number">19</div>
+                <h2 class="step-title">Set Header Cell Properties</h2>
+                <div class="step-content">
+                    <p><strong>Now we'll designate this cell as a header and specify what it labels.</strong></p>
+
+                    <ol>
+                        <li>In the Properties dialog, select <strong>"Header Cell"</strong></li>
+                        <li>Choose the appropriate scope:
+                            <ul>
+                                <li><strong>"Column"</strong> - if this header labels the cells below it</li>
+                                <li><strong>"Row"</strong> - if this header labels the cells to the right of it</li>
+                                <li><strong>"Both"</strong> - if this header labels both column and row</li>
+                                <li><strong>"None"</strong> - if it's not actually a header</li>
+                            </ul>
+                        </li>
+                        <li>Adjust row and column span if the header covers multiple cells</li>
+                        <li>Click <strong>"OK"</strong></li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step18.png" alt="Table Cell Properties dialog showing Header Cell option and scope selections">
+                        <div class="caption">Set the cell as a Header Cell and choose the appropriate scope</div>
+                    </div>
+
+                    <div class="important-note">
+                        <strong>Understanding Scope:</strong>
+                        <ul style="margin-top: 10px;">
+                            <li><strong>Column headers</strong> typically appear in the top row and describe what's in each column below</li>
+                            <li><strong>Row headers</strong> typically appear in the left column and describe what's in each row to the right</li>
+                            <li>Some tables have both column and row headers</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Repeat for All Headers:</strong> After setting this cell, continue the same process for all cells that act as headers in your table. It's recommended to decide which cells are headers based on how the table organizes information for the reader.
+                    </div>
+
+                    <div class="success-note">
+                        <strong>Almost Done with Tables!</strong> Once you've set all header cells, your table will be fully accessible. Screen readers will now announce headers along with data, providing context for every cell.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(19)<span aria-hidden="true">✓</span> Mark Step 19 Complete</button>
+                </div>
+            </div>
+
+
+            <!-- SECTION 5: Set Language & Recheck -->
+            <div class="intro-section" style="margin-top: 60px;">
+                <h2>🌐 Section 5: Set Language & Recheck</h2>
+                <p>Setting the correct document language is crucial for screen readers to pronounce text correctly. After fixing language settings, we'll run the checker again to ensure all issues are resolved.</p>
+            </div>
+
+            <!-- Step 20: Check Primary Language -->
+            <div class="step-section" data-step="20">
+                <div class="step-number">20</div>
+                <h2 class="step-title">Check Primary Language</h2>
+                <div class="step-content">
+                    <p><strong>The document's language setting tells screen readers how to pronounce the text.</strong></p>
+                    
+                    <p>In the Accessibility Checker report:</p>
+                    <ol>
+                        <li>Right-click on <strong>"Primary Language"</strong></li>
+                        <li>Click <strong>"Fix"</strong> from the context menu</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step20.png" alt="Right-clicking on Primary Language in the Accessibility Report and selecting Fix from the context menu">
+                        <div class="caption">Fixing the Primary Language setting</div>
+                    </div>
+
+                    <div class="important-note">
+                        <strong>Why This Matters:</strong> If the language is not set or set incorrectly, screen readers will pronounce words using the wrong language rules, making content incomprehensible to users. For example, Spanish text read with English pronunciation rules sounds completely wrong.
+                    </div>
+
+                    <div class="tip-box">
+                        If your document contains multiple languages (e.g., English with Spanish quotes), you can set language tags for specific sections later. The Primary Language sets the default for the entire document.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(20)<span aria-hidden="true">✓</span> Mark Step 20 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 21: Set Language to English -->
+            <div class="step-section" data-step="21">
+                <div class="step-number">21</div>
+                <h2 class="step-title">Set Language to English</h2>
+                <div class="step-content">
+                    <p><strong>Select the correct language for your document.</strong></p>
+                    
+                    <p>In the Reading Options dialog:</p>
+                    <ol>
+                        <li>Make sure the <strong>Language</strong> dropdown is set to <strong>"English (United States)"</strong> (or the primary language of your document)</li>
+                        <li>Click <strong>"OK"</strong> to save the setting</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step21.png" alt="Reading Options dialog showing Language dropdown set to English (United States) with OK button">
+                        <div class="caption">Setting the document language to English</div>
+                    </div>
+
+                    <div class="tip-box">
+                        Common language options include English (United States), English (United Kingdom), Spanish (Mexico), French, German, and many others. Choose the variant that matches your document's dialect for best results.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(21)<span aria-hidden="true">✓</span> Mark Step 21 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 22: Run Checker Again -->
+            <div class="step-section" data-step="22">
+                <div class="step-number">22</div>
+                <h2 class="step-title">Run the Accessibility Checker Again</h2>
+                <div class="step-content">
+                    <p><strong>After making fixes, always re-run the checker to catch any remaining issues.</strong></p>
+                    
+                    <ol>
+                        <li>Click the <strong>"Check for Accessibility"</strong> button again</li>
+                        <li>Review the updated report to see what issues remain</li>
+                        <li>Verify that "Primary Language" is now marked as passed</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step22.png" alt="Running the Accessibility Checker again showing updated results with Primary Language passed">
+                        <div class="caption">Re-running the checker to verify fixes</div>
+                    </div>
+
+                    <div class="success-note">
+                        <strong>Progress Check:</strong> At this point, you should see checkmarks for:
+                        <ul style="margin-top: 10px;">
+                            <li>✓ Tagged PDF</li>
+                            <li>✓ All images have alternate text</li>
+                            <li>✓ All tables have headers and summaries</li>
+                            <li>✓ Primary Language is set</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip-box">
+                        The Accessibility Checker doesn't catch everything automatically. Some issues require manual review, like verifying that heading levels are used correctly or that alt text is actually descriptive (not just present).
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(22)<span aria-hidden="true">✓</span> Mark Step 22 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 23: Open Tags Panel -->
+            <div class="step-section" data-step="23">
+                <div class="step-number">23</div>
+                <h2 class="step-title">Open the Tags Panel</h2>
+                <div class="step-content">
+                    <p><strong>The Tags panel shows the document's structure. We need to check for proper heading hierarchy.</strong></p>
+                    
+                    <ol>
+                        <li>Look for the <strong>"Tags"</strong> icon in the left sidebar (looks like a tag or label icon)</li>
+                        <li>Click on the <strong>"Tags"</strong> icon to open the Tags panel</li>
+                        <li>You'll see the document's tag tree structure</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step23.png" alt="Tags panel opened showing the document tag structure without proper heading tags">
+                        <div class="caption">Opening the Tags panel to view document structure</div>
+                    </div>
+
+                    <div class="important-note">
+                        <strong>What to Look For:</strong> A properly structured document should have heading tags (H1, H2, H3, etc.) in the tag tree. If you see only paragraph tags (&lt;P&gt;) without any heading tags (&lt;H1&gt;, &lt;H2&gt;, etc.), you'll need to manually add them in the next section.
+                    </div>
+
+                    <div class="tip-box">
+                        The tag tree is hierarchical - just like an outline. Headings should be nested properly: H1 for main title, H2 for major sections, H3 for subsections, etc. Never skip levels (e.g., don't go from H1 directly to H3).
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(23)<span aria-hidden="true">✓</span> Mark Step 23 Complete</button>
+                </div>
+            </div>
+
+            <!-- SECTION 6: Add Headings & Test -->
+            <div class="intro-section" style="margin-top: 60px;">
+                <h2>📑 Section 6: Add Headings & Test</h2>
+                <p>Headings provide structure and navigation for screen reader users. We'll add proper heading tags to your document and test the final result to ensure everything works correctly.</p>
+            </div>
+
+            <!-- Step 24: Check Tags for Headings -->
+            <div class="step-section" data-step="24">
+                <div class="step-number">24</div>
+                <h2 class="step-title">Check Tags for Headings</h2>
+                <div class="step-content">
+                    <p><strong>Examine the tag structure to see if proper heading tags exist.</strong></p>
+                    
+                    <p>In the Tags panel:</p>
+                    <ol>
+                        <li>Expand the tag tree by clicking the arrows next to tags</li>
+                        <li>Look for heading tags: <strong>&lt;H1&gt;</strong>, <strong>&lt;H2&gt;</strong>, <strong>&lt;H3&gt;</strong>, etc.</li>
+                        <li>If you only see <strong>&lt;P&gt;</strong> (paragraph) tags where there should be headings, you'll need to add them manually</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step24.png" alt="Tags panel showing document structure without proper heading tags, only paragraph tags visible">
+                        <div class="caption">Checking the tag structure for headings</div>
+                    </div>
+
+                    <div class="important-note">
+                        <strong>Heading Hierarchy Rules:</strong>
+                        <ul style="margin-top: 10px;">
+                            <li><strong>H1:</strong> Main document title (use only once)</li>
+                            <li><strong>H2:</strong> Major sections</li>
+                            <li><strong>H3:</strong> Subsections under H2</li>
+                            <li><strong>H4-H6:</strong> Further nested subsections</li>
+                        </ul>
+                        Never skip levels! Don't go from H1 to H3 without an H2 in between.
+                    </div>
+
+                    <div class="tip-box">
+                        Screen reader users rely heavily on headings to navigate documents. Many users jump between headings rather than reading linearly. Missing or improperly structured headings make navigation extremely difficult.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(24)<span aria-hidden="true">✓</span> Mark Step 24 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 25: Open Reading Order Panel -->
+            <div class="step-section" data-step="25">
+                <div class="step-number">25</div>
+                <h2 class="step-title">Open Reading Order Panel</h2>
+                <div class="step-content">
+                    <p><strong>Use the Reading Order tool to identify and tag headings in your document.</strong></p>
+                    
+                    <ol>
+                        <li>Go to <strong>Tools → Accessibility → Reading Order</strong></li>
+                        <li>Or search for "Reading Order" in the Tools search bar</li>
+                        <li>Click to open the Reading Order panel</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step25.png" alt="Opening the Reading Order tool from the Accessibility section in Adobe Acrobat Tools">
+                        <div class="caption">Opening the Reading Order panel</div>
+                    </div>
+
+                    <div class="tip-box">
+                        The Reading Order tool is essential for fixing document structure. You'll use it to designate which text should be headings, which should be regular text, and in what order content should be read.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(25)<span aria-hidden="true">✓</span> Mark Step 25 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 26: Select Text to Tag as Heading -->
+            <div class="step-section" data-step="26">
+                <div class="step-number">26</div>
+                <h2 class="step-title">Select Text to Tag as Heading</h2>
+                <div class="step-content">
+                    <p><strong>Identify the text that should be marked as a heading and select it.</strong></p>
+                    
+                    <p>With the Reading Order panel open:</p>
+                    <ol>
+                        <li>Click and drag to draw a box around the text that should be a heading (usually the document title or main heading)</li>
+                        <li>Or click on an existing text element to select it</li>
+                        <li>The selected area will be highlighted</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step26.png" alt="Drawing a selection box around text that should be tagged as a heading in the Reading Order panel">
+                        <div class="caption">Selecting text to tag as a heading</div>
+                    </div>
+
+                    <div class="important-note">
+                        <strong>How to Identify Headings:</strong>
+                        <ul style="margin-top: 10px;">
+                            <li>Look for text that's larger, bolder, or visually distinct from body text</li>
+                            <li>Document titles should be H1</li>
+                            <li>Section titles should be H2</li>
+                            <li>Subsection titles should be H3</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip-box">
+                        Be precise with your selection boxes. Try to select only the heading text, not surrounding paragraphs or whitespace. You can always adjust tags later in the Tags panel if needed.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(26)<span aria-hidden="true">✓</span> Mark Step 26 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 27: Click Heading 1 Button -->
+            <div class="step-section" data-step="27">
+                <div class="step-number">27</div>
+                <h2 class="step-title">Apply the Heading Tag</h2>
+                <div class="step-content">
+                    <p><strong>Tag the selected text as a heading using the Reading Order panel buttons.</strong></p>
+                    
+                    <ol>
+                        <li>In the Reading Order panel, click the <strong>"Heading 1"</strong> button to tag the main title</li>
+                        <li>Or click <strong>"Heading 2"</strong>, <strong>"Heading 3"</strong>, etc., depending on the heading level</li>
+                        <li>The tag will be applied and you'll see the structure update in the Tags panel</li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step27.png" alt="Reading Order panel showing Heading 1 button being clicked to apply heading tag to selected text">
+                        <div class="caption">Applying a Heading 1 tag to the selected text</div>
+                    </div>
+
+                    <div class="success-note">
+                        <strong>Repeat for All Headings:</strong> Continue this process for all headings in your document:
+                        <ul style="margin-top: 10px;">
+                            <li>Select the text</li>
+                            <li>Click the appropriate heading level button</li>
+                            <li>Work from top to bottom through the document</li>
+                            <li>Maintain proper hierarchy (H1 → H2 → H3, never skip levels)</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip-box">
+                        After tagging headings, check the Tags panel to verify the structure. You should see a logical hierarchy with H1 at the top, followed by H2s for sections, H3s for subsections, etc.
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(27)<span aria-hidden="true">✓</span> Mark Step 27 Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 28: Test with Screen Reader -->
+            <div class="step-section" data-step="28">
+                <div class="step-number">28</div>
+                <h2 class="step-title">Test with Screen Reader / Verify Reading Order</h2>
+                <div class="step-content">
+                    <p><strong>The final and most important step: test your document to ensure it's truly accessible.</strong></p>
+                    
+                    <p>Testing options:</p>
+                    <ol>
+                        <li><strong>View Reading Order:</strong> In the Reading Order panel, verify the numbered order makes sense</li>
+                        <li><strong>Read Out Loud:</strong> Go to <strong>View → Read Out Loud → Activate Read Out Loud</strong>, then navigate with keyboard shortcuts to hear how screen readers will interpret your document</li>
+                        <li><strong>Test with Actual Screen Reader:</strong>
+                            <ul>
+                                <li><strong>Windows:</strong> Use NVDA (free) or JAWS</li>
+                                <li><strong>Mac:</strong> Use built-in VoiceOver (Cmd+F5)</li>
+                                <li>Navigate by headings to test structure</li>
+                                <li>Verify all images have alt text read aloud</li>
+                                <li>Check that table headers are announced</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <div class="image-placeholder">
+                        <img src="images/step28.png" alt="Testing document accessibility with Read Out Loud feature showing reading order and verification">
+                        <div class="caption">Testing the document with Read Out Loud and viewing reading order</div>
+                    </div>
+
+                    <div class="important-note">
+                        <strong>What to Test For:</strong>
+                        <ul style="margin-top: 10px;">
+                            <li>✓ Content reads in logical order (not jumping around)</li>
+                            <li>✓ Headings are announced with correct levels (H1, H2, H3)</li>
+                            <li>✓ Images have alt text that's read aloud</li>
+                            <li>✓ Table headers are announced when navigating cells</li>
+                            <li>✓ No content is skipped or unreadable</li>
+                            <li>✓ Language pronunciation is correct</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Screen Reader Keyboard Shortcuts (NVDA/JAWS):</strong>
+                        <ul style="margin-top: 10px;">
+                            <li><strong>H key:</strong> Jump to next heading</li>
+                            <li><strong>G key:</strong> Jump to next graphic/image</li>
+                            <li><strong>T key:</strong> Jump to next table</li>
+                            <li><strong>Arrow keys:</strong> Read line by line</li>
+                            <li><strong>Insert+Down arrow:</strong> Read all from current position</li>
+                        </ul>
+                    </div>
+
+                    <div class="success-note" style="margin-top: 30px;">
+                        <strong>🎉 Congratulations!</strong> You've completed all remediation steps. Your PDF should now be WCAG 2.2 Level AA compliant. Remember:
+                        <ul style="margin-top: 10px;">
+                            <li>✓ Save your work frequently</li>
+                            <li>✓ Run the Accessibility Checker one final time</li>
+                            <li>✓ Keep the original PDF as a backup</li>
+                            <li>✓ Test with real screen reader users when possible</li>
+                        </ul>
+                    </div>
+
+                    <button class="complete-btn" onclick="markStepComplete(28)<span aria-hidden="true">✓</span> Mark Step 28 Complete - Training Finished!</button>
+                </div>
+            </div>
+            <!-- Final Summary -->
+            <div class="summary-section" id="summary">
+                <h2>🎉 Congratulations! You've Completed the Training</h2>
+                <p>You now know how to manually remediate PDFs for accessibility using Adobe Acrobat.</p>
+
+                <div class="certificate-box">
+                    <h3>📜 Key Skills Mastered</h3>
+                    <div class="checklist">
+                        <div class="checklist-item checked">
+                            ✓ Running the Adobe Acrobat Accessibility Checker
+                        </div>
+                        <div class="checklist-item checked">
+                            ✓ Tagging PDFs for screen reader accessibility
+                        </div>
+                        <div class="checklist-item checked">
+                            ✓ Writing effective alternative text for images
+                        </div>
+                        <div class="checklist-item checked">
+                            ✓ Creating accessible table structures with headers
+                        </div>
+                        <div class="checklist-item checked">
+                            ✓ Setting document language correctly
+                        </div>
+                        <div class="checklist-item checked">
+                            ✓ Building proper heading hierarchy
+                        </div>
+                        <div class="checklist-item checked">
+                            ✓ Testing with screen readers
+                        </div>
+                        <div class="checklist-item checked">
+                            ✓ Understanding WCAG 2.2 Level AA compliance
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="color: white; margin-top: 40px; font-size: 1.8em;">🚀 Next Steps</h3>
+                <p style="font-size: 1.1em; max-width: 800px; margin: 20px auto;">
+                    Now that you understand manual remediation, you can:
+                </p>
+                <ul style="text-align: left; max-width: 600px; margin: 20px auto; font-size: 1.05em;">
+                    <li>Use our automated tool for faster processing of simple documents</li>
+                    <li>Manually remediate complex PDFs that need expert review</li>
+                    <li>Verify and enhance automated remediation results</li>
+                    <li>Train others on your team in accessibility best practices</li>
+                    <li>Become the go-to accessibility expert for your organization</li>
+                </ul>
+
+                <div class="nav-buttons" style="margin-top: 30px;">
+                    <a href="deploy.html" class="nav-btn" style="background: white; color: #8C1D40;">
+                        <span aria-hidden="true">🚀</span> Deployment Guide
+                    </a>
+                    <a href="#top" class="nav-btn" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white;">
+                        📖 Review Training
+                    </a>
+                </div>
+
+                <div style="margin-top: 50px; padding-top: 30px; border-top: 2px solid rgba(255,255,255,0.3);">
+                    <p style="font-size: 1.1em; opacity: 0.9;">
+                        💡 <strong>Remember:</strong> Accessibility is an ongoing practice, not a one-time fix. Keep learning and improving!
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer" role="contentinfo">
+            <img src="https://www.asu.edu/profiles/contrib/webspark/modules/asu_footer/img/ASU-EndorsedLogo.png" alt="Arizona State University" style="height: 60px; margin-bottom: 15px;">
+            <p><strong>Arizona State University</strong></p>
+            <p>Making digital content accessible to everyone</p>
+            <p style="margin-top: 15px; opacity: 0.8;">© 2026 Arizona State University</p>
+        </footer>
+    </div>
+
+    <!-- Quick Navigation (Desktop) -->
+    <nav class="quick-nav" id="quickNav" aria-label="Quick navigation to training steps">
+        <h3>📍 Quick Navigation</h3>
+        <ul>
+            <li style="font-weight: bold; color: #8C1D40; margin-top: 10px;">Open & Check</li>
+            <li><a href="#" data-step="1">1. Open PDF</a></li>
+            <li><a href="#" data-step="2">2. Run Checker</a></li>
+            <li><a href="#" data-step="3">3. View Report</a></li>
+            <li><a href="#" data-step="4">4. Open Menus</a></li>
+
+            <li style="font-weight: bold; color: #8C1D40; margin-top: 10px;">Fix Tagging</li>
+            <li><a href="#" data-step="5">5. Fix Tagged PDF</a></li>
+
+            <li style="font-weight: bold; color: #8C1D40; margin-top: 10px;">Add Alt Text</li>
+            <li><a href="#" data-step="6">6. Find Missing Alt</a></li>
+            <li><a href="#" data-step="7">7. Right Click</a></li>
+            <li><a href="#" data-step="8">8. View Dialog</a></li>
+            <li><a href="#" data-step="9">9. Write Alt Text</a></li>
+            <li><a href="#" data-step="10">10. Verify Fixed</a></li>
+
+            <li style="font-weight: bold; color: #8C1D40; margin-top: 10px;">Fix Tables</li>
+            <li><a href="#" data-step="11">11. Open Tool</a></li>
+            <li><a href="#" data-step="12">12. View Panel</a></li>
+            <li><a href="#" data-step="13">13. Select Table</a></li>
+            <li><a href="#" data-step="14">14. Add Summary</a></li>
+            <li><a href="#" data-step="15">15. Write Summary</a></li>
+            <li><a href="#" data-step="16">16. Open Editor</a></li>
+            <li><a href="#" data-step="17">17. Editor Mode</a></li>
+            <li><a href="#" data-step="18">18. Cell Properties</a></li>
+            <li><a href="#" data-step="19">19. Set Headers</a></li>
+
+            <li style="font-weight: bold; color: #8C1D40; margin-top: 10px;">Language & Recheck</li>
+            <li><a href="#" data-step="20">20. Check Language</a></li>
+            <li><a href="#" data-step="21">21. Set Language</a></li>
+            <li><a href="#" data-step="22">22. Run Again</a></li>
+            <li><a href="#" data-step="23">23. Open Tags</a></li>
+
+            <li style="font-weight: bold; color: #8C1D40; margin-top: 10px;">Headings & Test</li>
+            <li><a href="#" data-step="24">24. Check Tags</a></li>
+            <li><a href="#" data-step="25">25. Reading Order</a></li>
+            <li><a href="#" data-step="26">26. Select Text</a></li>
+            <li><a href="#" data-step="27">27. Apply Heading</a></li>
+            <li><a href="#" data-step="28">28. Test Document</a></li>
+
+            <li><a href="#summary" style="margin-top: 15px; font-weight: bold;">📋 Summary</a></li>
+        </ul>
+    </nav>
+
+    <!-- Mobile Toggle Button -->
+    <button class="toggle-nav" onclick="toggleQuickNav()" aria-label="Toggle quick navigation menu" aria-expanded="false" aria-controls="quickNav">📍</button>
+
+    <script>
+        // Track completed steps
+        let completedSteps = new Set();
+        const totalSteps = 28;
+
+        // Mark step as complete
+        function markStepComplete(stepNum) {
+            completedSteps.add(stepNum);
+
+            // Update step visual
+            const stepSection = document.querySelector(`[data-step="${stepNum}"]`);
+            if (stepSection) {
+                stepSection.classList.add('completed');
+                const button = stepSection.querySelector('.complete-btn');
+                if (button) {
+                    button.textContent = '✓ Completed';
+                    button.classList.add('completed');
+                    button.disabled = true;
+                }
+            }
+
+            // Update quick nav
+            const navLink = document.querySelector(`[data-step="${stepNum}"]`);
+            if (navLink) {
+                navLink.classList.add('completed');
+            }
+
+            // Update progress bar
+            updateProgress();
+
+            // Scroll to next step
+            const nextStep = stepNum + 1;
+            if (nextStep <= totalSteps) {
+                setTimeout(() => {
+                    const nextSection = document.querySelector(`[data-step="${nextStep}"]`);
+                    if (nextSection) {
+                        nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 500);
+            } else {
+                // All steps complete - scroll to summary
+                setTimeout(() => {
+                    document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
+                }, 500);
+            }
+
+            // Save progress
+            localStorage.setItem('pdfTrainingProgress', JSON.stringify([...completedSteps]));
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const percentage = (completedSteps.size / totalSteps) * 100;
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+
+            progressFill.style.width = percentage + '%';
+            progressFill.setAttribute('aria-valuenow', Math.round(percentage));
+            progressText.textContent = Math.round(percentage) + '% Complete (' + completedSteps.size + '/' + totalSteps + ' steps)';
+        }
+
+        // Quick nav link handling
+        document.querySelectorAll('.quick-nav a[data-step]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const stepNum = parseInt(this.getAttribute('data-step'));
+                const stepSection = document.querySelector(`[data-step="${stepNum}"]`);
+                if (stepSection) {
+                    stepSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Show progress bar on scroll
+        let lastScroll = 0;
+        window.addEventListener('scroll', function() {
+            const progressBar = document.getElementById('progressBar');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > 300) {
+                progressBar.classList.add('visible');
+            } else {
+                progressBar.classList.remove('visible');
+            }
+
+            lastScroll = scrollTop;
+        });
+
+        // Toggle mobile quick nav
+        function toggleQuickNav() {
+            const quickNav = document.getElementById('quickNav');
+            const toggleBtn = document.querySelector('.toggle-nav');
+            const isVisible = quickNav.classList.toggle('mobile-visible');
+
+            // Update aria-expanded for accessibility
+            if (toggleBtn) {
+                toggleBtn.setAttribute('aria-expanded', isVisible ? 'true' : 'false');
+            }
+        }
+
+        // Load saved progress
+        window.addEventListener('DOMContentLoaded', function() {
+            const saved = localStorage.getItem('pdfTrainingProgress');
+            if (saved) {
+                const savedSteps = JSON.parse(saved);
+                savedSteps.forEach(step => {
+                    markStepComplete(step);
+                });
+            }
+        });
+
+        // Reset progress button (for testing)
+        function resetProgress() {
+            if (confirm('Reset all training progress?')) {
+                completedSteps.clear();
+                localStorage.removeItem('pdfTrainingProgress');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
