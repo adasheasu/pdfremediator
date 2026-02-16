@@ -253,11 +253,12 @@
         }
 
         .info-box {
-            background: #d1ecf1;
-            border-left: 5px solid #17a2b8;
+            background: #E5F5FC;
+            border-left: 5px solid #00A3E0;
             padding: 20px;
             margin: 20px 0;
             border-radius: 8px;
+            color: #000000;
         }
 
         .info-box::before {
@@ -266,11 +267,12 @@
         }
 
         .warning-box {
-            background: #fff3cd;
-            border-left: 5px solid #ffc107;
+            background: #FFF9E5;
+            border-left: 5px solid #FFC627;
             padding: 20px;
             margin: 20px 0;
             border-radius: 8px;
+            color: #000000;
         }
 
         .warning-box::before {
@@ -450,6 +452,18 @@
                         <div class="icon">🎓</div>
                         <div class="title">Online Course</div>
                         <div class="description">Learning Management Systems</div>
+                    </div>
+
+                    <div class="option-card" onclick="showResult('asu-support')">
+                        <div class="icon">📚</div>
+                        <div class="title">ASU Support & Training</div>
+                        <div class="description">Resources and community</div>
+                    </div>
+
+                    <div class="option-card" onclick="showResult('testing-content')">
+                        <div class="icon">🔍</div>
+                        <div class="title">Testing Your Content</div>
+                        <div class="description">Validation tools and methods</div>
                     </div>
                 </div>
             </div>
@@ -654,6 +668,20 @@
             <img src="https://www.asu.edu/profiles/contrib/webspark/modules/asu_footer/img/ASU-EndorsedLogo.png" alt="Arizona State University" style="height: 60px; margin-bottom: 15px;">
             <p><strong>Arizona State University</strong></p>
             <p>Making digital content accessible to everyone</p>
+
+            <div style="margin: 20px 0; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.2); border-bottom: 1px solid rgba(255,255,255,0.2);">
+                <p style="margin-bottom: 15px; font-weight: bold;">Quick Links</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; font-size: 0.9em;">
+                    <a href="https://accessibility.asu.edu/" style="color: #FFC627; text-decoration: none;">ASU Accessibility Hub</a>
+                    <span style="opacity: 0.5;">|</span>
+                    <a href="https://accessibility.asu.edu/asu-accessibility/faculty-resources-frame" style="color: #FFC627; text-decoration: none;">FRAME Resources</a>
+                    <span style="opacity: 0.5;">|</span>
+                    <a href="https://accessibility.asu.edu/training" style="color: #FFC627; text-decoration: none;">Training</a>
+                    <span style="opacity: 0.5;">|</span>
+                    <a href="https://accessibility.asu.edu/contact" style="color: #FFC627; text-decoration: none;">Report Issues</a>
+                </div>
+            </div>
+
             <p style="margin-top: 15px; opacity: 0.8;">© 2026 Arizona State University</p>
         </footer>
     </div>
@@ -752,12 +780,12 @@
                         <div class="tool-recommendation">
                             <h3>Recommended Tools:</h3>
                             <p><strong>1. Microsoft Office Accessibility Checker</strong> - Built into Word, PowerPoint, and Excel</p>
-                            <a href="https://support.microsoft.com/en-us/office/improve-accessibility-with-the-accessibility-checker-a16f6de0-2f39-4a2b-8bd8-5ad801426c7f" class="tool-link" target="_blank">
+                            <a href="https://support.microsoft.com/en-us/office/improve-accessibility-with-the-accessibility-checker-a16f6de0-2f39-4a2b-8bd8-5ad801426c7f" class="tool-link">
                                 📖 Microsoft Accessibility Guide
                             </a>
 
                             <p style="margin-top: 20px;"><strong>2. Grackle</strong> - Alternative checker for Office documents</p>
-                            <a href="https://www.grackledocs.com/en/check-a-document/" class="tool-link secondary" target="_blank">
+                            <a href="https://www.grackledocs.com/en/check-a-document/" class="tool-link secondary">
                                 🔍 Try Grackle
                             </a>
                         </div>
@@ -767,7 +795,7 @@
                         </div>
 
                         <div class="action-buttons">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
@@ -781,13 +809,13 @@
                         <div class="tool-recommendation">
                             <h3>Recommended Tool:</h3>
                             <p><strong>Grackle Workspace</strong> - Comprehensive accessibility checker for Google Docs</p>
-                            <a href="https://www.grackledocs.com/en/products-services/grackle-workspace/google-docs/" class="tool-link" target="_blank">
+                            <a href="https://www.grackledocs.com/en/products-services/grackle-workspace/google-docs/" class="tool-link">
                                 📖 Grackle Docs Guide
                             </a>
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
@@ -801,7 +829,7 @@
                         <div class="tool-recommendation">
                             <h3>Recommended Tool:</h3>
                             <p><strong>Microsoft Office Accessibility Checker</strong> - Built into PowerPoint</p>
-                            <a href="https://support.microsoft.com/en-us/office/improve-accessibility-with-the-accessibility-checker-a16f6de0-2f39-4a2b-8bd8-5ad801426c7f" class="tool-link" target="_blank">
+                            <a href="https://support.microsoft.com/en-us/office/improve-accessibility-with-the-accessibility-checker-a16f6de0-2f39-4a2b-8bd8-5ad801426c7f" class="tool-link">
                                 📖 PowerPoint Accessibility Guide
                             </a>
                         </div>
@@ -817,7 +845,7 @@
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
@@ -831,13 +859,13 @@
                         <div class="tool-recommendation">
                             <h3>Recommended Tool:</h3>
                             <p><strong>Grackle Slides</strong> - Accessibility checker for Google Slides</p>
-                            <a href="https://www.grackledocs.com/en/products-services/grackle-workspace/google-slides/" class="tool-link" target="_blank">
+                            <a href="https://www.grackledocs.com/en/products-services/grackle-workspace/google-slides/" class="tool-link">
                                 📖 Grackle Slides Guide
                             </a>
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
@@ -851,7 +879,7 @@
                         <div class="tool-recommendation">
                             <h3>Recommended Tool:</h3>
                             <p><strong>Microsoft Office Accessibility Checker</strong> - Built into Excel</p>
-                            <a href="https://support.microsoft.com/en-us/office/improve-accessibility-with-the-accessibility-checker-a16f6de0-2f39-4a2b-8bd8-5ad801426c7f" class="tool-link" target="_blank">
+                            <a href="https://support.microsoft.com/en-us/office/improve-accessibility-with-the-accessibility-checker-a16f6de0-2f39-4a2b-8bd8-5ad801426c7f" class="tool-link">
                                 📖 Excel Accessibility Guide
                             </a>
                         </div>
@@ -868,7 +896,7 @@
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
@@ -882,13 +910,13 @@
                         <div class="tool-recommendation">
                             <h3>Recommended Tool:</h3>
                             <p><strong>Grackle Sheets</strong> - Accessibility checker for Google Sheets</p>
-                            <a href="https://www.grackledocs.com/en/products-services/grackle-workspace/google-sheets/" class="tool-link" target="_blank">
+                            <a href="https://www.grackledocs.com/en/products-services/grackle-workspace/google-sheets/" class="tool-link">
                                 📖 Grackle Sheets Guide
                             </a>
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
@@ -902,7 +930,7 @@
                         <div class="tool-recommendation">
                             <h3>Guidelines & Best Practices:</h3>
                             <p><strong>W3C Text Content Guidelines</strong></p>
-                            <a href="https://www.w3.org/TR/WCAG20-TECHS/text" class="tool-link" target="_blank">
+                            <a href="https://www.w3.org/TR/WCAG20-TECHS/text" class="tool-link">
                                 📖 W3C Guidelines
                             </a>
 
@@ -912,7 +940,7 @@
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
@@ -927,7 +955,7 @@
                             <h3>Recommended Testing Tools:</h3>
 
                             <p><strong>1. Browser Extensions (for all sites):</strong></p>
-                            <a href="https://accessibility.asu.edu/testing/web" class="tool-link" target="_blank">
+                            <a href="https://accessibility.asu.edu/testing/web" class="tool-link">
                                 🔍 WAVE & Siteimprove Chrome Plugins
                             </a>
 
@@ -935,25 +963,25 @@
                             <ul class="resources-list" style="margin-top: 15px;">
                                 <li>
                                     <strong>Drupal</strong>
-                                    <a href="https://www.drupal.org/docs/getting-started/accessibility/how-to-do-an-accessibility-review" class="tool-link secondary" target="_blank">Guide</a>
+                                    <a href="https://www.drupal.org/docs/getting-started/accessibility/how-to-do-an-accessibility-review" class="tool-link secondary">Guide</a>
                                 </li>
                                 <li>
                                     <strong>Google Sites</strong>
-                                    <a href="https://support.google.com/sites/answer/7529116?hl=en" class="tool-link secondary" target="_blank">Guide</a>
+                                    <a href="https://support.google.com/sites/answer/7529116?hl=en" class="tool-link secondary">Guide</a>
                                 </li>
                                 <li>
                                     <strong>Wix</strong>
-                                    <a href="https://support.wix.com/en/article/accessibility-checking-site-accessibility-with-the-accessibility-monitor" class="tool-link secondary" target="_blank">Guide</a>
+                                    <a href="https://support.wix.com/en/article/accessibility-checking-site-accessibility-with-the-accessibility-monitor" class="tool-link secondary">Guide</a>
                                 </li>
                                 <li>
                                     <strong>WordPress</strong>
-                                    <a href="https://wordpress.org/plugins/accessibility-checker/" class="tool-link secondary" target="_blank">Plugin</a>
+                                    <a href="https://wordpress.org/plugins/accessibility-checker/" class="tool-link secondary">Plugin</a>
                                 </li>
                             </ul>
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
@@ -984,7 +1012,7 @@
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
@@ -1011,16 +1039,49 @@
                             <h3 style="margin-top: 30px;">🛠️ Professional Tools</h3>
                             <ul class="resources-list" style="margin-top: 15px;">
                                 <li>
-                                    <strong>Adobe Acrobat Pro</strong> - Industry standard for manual remediation
-                                    <a href="https://helpx.adobe.com/acrobat/using/create-verify-pdf-accessibility.html" class="tool-link secondary" target="_blank">Guide</a>
+                                    <strong>Adobe Acrobat Pro</strong> - Good for smaller PDFs and fewer number of PDFs
+                                    <a href="https://helpx.adobe.com/acrobat/using/create-verify-pdf-accessibility.html" class="tool-link secondary">Guide</a>
                                 </li>
                                 <li>
-                                    <strong>Equidox</strong> - Automated PDF remediation service
-                                    <a href="https://accessibility.asu.edu/articles/equidox" class="tool-link secondary" target="_blank">ASU Guide</a>
+                                    <strong>Equidox</strong> - Better for larger size and volume of PDFs
+                                    <a href="https://accessibility.asu.edu/articles/equidox" class="tool-link secondary">ASU Guide</a>
                                 </li>
                                 <li>
                                     <strong>Grackle</strong> - PDF accessibility checker
-                                    <a href="https://www.grackledocs.com/en/check-a-document/" class="tool-link secondary" target="_blank">Try Grackle</a>
+                                    <a href="https://www.grackledocs.com/en/check-a-document/" class="tool-link secondary">Try Grackle</a>
+                                </li>
+                            </ul>
+
+                            <h3 style="margin-top: 30px;">🔍 Testing Tools</h3>
+                            <ul class="resources-list" style="margin-top: 15px;">
+                                <li>
+                                    <strong>WAVE Browser Extension</strong> - Provides initial assessment (catches 20-30% of issues)
+                                    <a href="https://wave.webaim.org/extension/" class="tool-link secondary">Get WAVE</a>
+                                </li>
+                                <li>
+                                    <strong>Siteimprove</strong> - Continuous monitoring - ASU units can request free scanning
+                                    <a href="https://brandguide.asu.edu/tools/software/siteimprove" class="tool-link secondary">ASU Siteimprove</a>
+                                </li>
+                                <li>
+                                    <strong>ASU Web Accessibility Audit Tool</strong> - Step-by-step guided evaluation tool
+                                    <a href="https://accessibility.asu.edu/testing/audit" class="tool-link secondary">Audit Tool</a>
+                                </li>
+                            </ul>
+
+                            <h3 style="margin-top: 30px;">🎧 Screen Reader Testing</h3>
+                            <p style="margin-top: 10px; font-size: 0.95em;">Test your PDFs with real screen readers to ensure they're truly accessible:</p>
+                            <ul class="resources-list" style="margin-top: 15px;">
+                                <li>
+                                    <strong>JAWS (Windows)</strong> - Free for ASU faculty/staff via Freedom Scientific portal (40.5% of users use JAWS)
+                                    <a href="https://accessibility.asu.edu/testing/web" class="tool-link secondary">ASU Access Info</a>
+                                </li>
+                                <li>
+                                    <strong>NVDA (Windows)</strong> - Free open-source screen reader (37.7% of users use NVDA)
+                                    <a href="https://www.nvaccess.org/" class="tool-link secondary">Download NVDA</a>
+                                </li>
+                                <li>
+                                    <strong>VoiceOver (Mac/iOS)</strong> - Pre-installed on Apple devices (70.6% of mobile users use VoiceOver)
+                                    <a href="https://support.apple.com/guide/voiceover/welcome/mac" class="tool-link secondary">VoiceOver Guide</a>
                                 </li>
                             </ul>
                         </div>
@@ -1035,7 +1096,7 @@
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="/training" class="btn btn-primary">📚 Start Training</a>
                             <a href="/" class="btn btn-primary">🔧 Use Tool</a>
                         </div>
@@ -1069,17 +1130,17 @@
                                 </li>
                                 <li>
                                     <strong>Adobe Acrobat Pro</strong> - Complete manual control
-                                    <a href="https://helpx.adobe.com/acrobat/using/create-verify-pdf-accessibility.html" class="tool-link secondary" target="_blank">Guide</a>
+                                    <a href="https://helpx.adobe.com/acrobat/using/create-verify-pdf-accessibility.html" class="tool-link secondary">Guide</a>
                                 </li>
                                 <li>
                                     <strong>Equidox</strong> - Professional service for complex scans
-                                    <a href="https://accessibility.asu.edu/articles/equidox" class="tool-link secondary" target="_blank">Learn More</a>
+                                    <a href="https://accessibility.asu.edu/articles/equidox" class="tool-link secondary">Learn More</a>
                                 </li>
                             </ul>
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="/training" class="btn btn-primary">📚 Start Training</a>
                         </div>
                     </div>
@@ -1093,7 +1154,7 @@
                         <div class="tool-recommendation">
                             <h3>Recommended Service:</h3>
                             <p><strong>REV</strong> - Professional transcription for published content</p>
-                            <a href="https://www.rev.com/" class="tool-link" target="_blank">
+                            <a href="https://www.rev.com/" class="tool-link">
                                 🎬 Try REV
                             </a>
 
@@ -1103,7 +1164,7 @@
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
@@ -1120,21 +1181,21 @@
                             <ul class="resources-list">
                                 <li>
                                     <strong>AI Transcription Tool</strong> - ASU's automated transcription
-                                    <a href="https://asu-grading-backend.ea.asu.edu/transcript" class="tool-link secondary" target="_blank">Try Tool</a>
+                                    <a href="https://asu-grading-backend.ea.asu.edu/transcript" class="tool-link secondary">Try Tool</a>
                                 </li>
                                 <li>
                                     <strong>Media+</strong> - ASU's media hosting with transcription
-                                    <a href="https://mediaplus.asu.edu/" class="tool-link secondary" target="_blank">Media+</a>
+                                    <a href="https://mediaplus.asu.edu/" class="tool-link secondary">Media+</a>
                                 </li>
                                 <li>
                                     <strong>Wistia</strong> - Video hosting with accessibility features
-                                    <a href="https://wistia.com/" class="tool-link secondary" target="_blank">Wistia</a>
+                                    <a href="https://wistia.com/" class="tool-link secondary">Wistia</a>
                                 </li>
                             </ul>
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
@@ -1148,7 +1209,7 @@
                         <div class="tool-recommendation">
                             <h3>Recommended Tool:</h3>
                             <p><strong>ASU Image Accessibility Creator</strong> - AI-powered alt text generation</p>
-                            <a href="https://asuo-ai-labs.streamlit.app/Image_Accessibility" class="tool-link" target="_blank">
+                            <a href="https://asuo-ai-labs.streamlit.app/Image_Accessibility" class="tool-link">
                                 🖼️ Create Alt Text
                             </a>
 
@@ -1165,7 +1226,7 @@
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
@@ -1174,7 +1235,7 @@
                 'canvas': `
                     <div class="result-section">
                         <h2>🎓 Canvas Course Accessibility</h2>
-                        <p>Use FRAME, Ally, and Claude Canvas Accessibility Checker to ensure your Canvas course is accessible.</p>
+                        <p>Use FRAME, Ally, MediaPlus, Equatio, and accessibility checkers to ensure your Canvas course is accessible.</p>
 
                         <div class="tool-recommendation">
                             <h3>Recommended Tools:</h3>
@@ -1182,11 +1243,11 @@
                             <ul class="resources-list">
                                 <li>
                                     <strong>FRAME</strong> - ASU's Faculty Resources for Accessible Materials & Education
-                                    <a href="https://accessibility.asu.edu/asu-accessibility/faculty-resources-frame" class="tool-link secondary" target="_blank">FRAME Resources</a>
+                                    <a href="https://accessibility.asu.edu/asu-accessibility/faculty-resources-frame" class="tool-link secondary">FRAME Resources</a>
                                 </li>
                                 <li>
                                     <strong>Ally</strong> - Automated accessibility checker for Canvas
-                                    <a href="https://lx.asu.edu/ally" class="tool-link secondary" target="_blank">Ally Guide</a>
+                                    <a href="https://lx.asu.edu/ally" class="tool-link secondary">Ally Guide</a>
                                 </li>
                                 <li>
                                     <strong>Claude Canvas Accessibility Checker</strong> - AI-powered comprehensive accessibility analysis
@@ -1194,24 +1255,39 @@
                                 </li>
                                 <li>
                                     <strong>Canvas Accessibility Checker</strong> - Built-in Rich Content Editor checker
-                                    <a href="https://community.instructure.com/en/kb/articles/662936-how-do-i-use-the-accessibility-checker-in-the-rich-content-editor" class="tool-link secondary" target="_blank">Canvas Guide</a>
+                                    <a href="https://community.instructure.com/en/kb/articles/662936-how-do-i-use-the-accessibility-checker-in-the-rich-content-editor" class="tool-link secondary">Canvas Guide</a>
+                                </li>
+                                <li>
+                                    <strong>MediaPlus</strong> - ASU tool for adding captions and transcripts to videos
+                                    <a href="https://learning.asu.edu/mediaplus" class="tool-link secondary">MediaPlus Info</a>
+                                </li>
+                                <li>
+                                    <strong>Equatio</strong> - Digital equation accessibility tool for STEM content
+                                    <a href="https://www.texthelp.com/en-us/products/equatio/" class="tool-link secondary">Equatio Guide</a>
+                                </li>
+                                <li>
+                                    <strong>Microsoft Office Accessibility Checker</strong> - Check Word, PowerPoint, Excel files before uploading to Canvas
+                                    <a href="https://support.microsoft.com/en-us/office/improve-accessibility-with-the-accessibility-checker-a16f6de0-2f39-4a2b-8bd8-5ad801426c7f" class="tool-link secondary">Office Checker Guide</a>
                                 </li>
                             </ul>
 
                             <div class="info-box" style="margin-top: 20px;">
                                 <strong>💡 Recommended Workflow:</strong>
                                 <ol style="padding-left: 20px; margin-top: 10px;">
-                                    <li>Start with FRAME for accessibility best practices</li>
-                                    <li>Use Ally to identify and fix document issues</li>
+                                    <li>Start with FRAME for accessibility best practices and training</li>
+                                    <li>Use Microsoft Office Accessibility Checker before uploading documents</li>
+                                    <li>Use Ally to identify and fix document issues in Canvas</li>
                                     <li>Run Claude Canvas Accessibility Checker for comprehensive course analysis</li>
                                     <li>Use Canvas built-in checker for Rich Content Editor content</li>
+                                    <li>Add captions/transcripts to videos using MediaPlus</li>
+                                    <li>Use Equatio for accessible STEM equations</li>
                                     <li>Work with your instructional designer for comprehensive review</li>
                                 </ol>
                             </div>
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
@@ -1226,7 +1302,7 @@
                             <h3>Recommended Resources:</h3>
 
                             <p><strong>Articulate 360 Accessibility Checker</strong></p>
-                            <a href="https://community.articulate.com/discussions/discuss/accessibility-checker/1224733" class="tool-link" target="_blank">
+                            <a href="https://community.articulate.com/discussions/discuss/accessibility-checker/1224733" class="tool-link">
                                 📖 Articulate Accessibility Guide
                             </a>
 
@@ -1243,7 +1319,7 @@
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
@@ -1260,11 +1336,11 @@
                             <ul class="resources-list">
                                 <li>
                                     <strong>FRAME</strong> - ASU accessibility resources
-                                    <a href="https://accessibility.asu.edu/asu-accessibility/faculty-resources-frame" class="tool-link secondary" target="_blank">FRAME</a>
+                                    <a href="https://accessibility.asu.edu/asu-accessibility/faculty-resources-frame" class="tool-link secondary">FRAME</a>
                                 </li>
                                 <li>
                                     <strong>Ally</strong> - Multi-platform accessibility
-                                    <a href="https://lx.asu.edu/ally" class="tool-link secondary" target="_blank">Ally</a>
+                                    <a href="https://lx.asu.edu/ally" class="tool-link secondary">Ally</a>
                                 </li>
                             </ul>
 
@@ -1272,12 +1348,12 @@
 
                             <ul class="resources-list">
                                 <li>
-                                    <strong>Moodle</strong>
-                                    <a href="https://moodle.com/functionality-with-moodle/moodle-accessibility/" class="tool-link secondary" target="_blank">Moodle Guide</a>
+                                    <strong>Moodle</strong> - For courses in Moodle
+                                    <a href="https://moodle.com/functionality-with-moodle/moodle-accessibility/" class="tool-link secondary">Moodle Guide</a>
                                 </li>
                                 <li>
                                     <strong>WAVE & Siteimprove</strong> - For individual pages
-                                    <a href="https://accessibility.asu.edu/testing/web" class="tool-link secondary" target="_blank">Testing Tools</a>
+                                    <a href="https://accessibility.asu.edu/testing/web" class="tool-link secondary">Testing Tools</a>
                                 </li>
                             </ul>
 
@@ -1287,7 +1363,117 @@
                         </div>
 
                         <div class="action-buttons" style="margin-top: 30px;">
-                            <button class="btn btn-secondary" onclick="startOver()<span aria-hidden="true">🔄</span> Start Over</button>
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'asu-support': `
+                    <div class="result-section">
+                        <h2>📚 ASU Support & Training Resources</h2>
+                        <p>Connect with ASU's accessibility community and continue your learning journey.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>🌐 ASU IT Accessibility Hub</h3>
+                            <p>Your central resource for all accessibility information, guides, tools, and support at ASU.</p>
+                            <a href="https://accessibility.asu.edu/" class="tool-link">Visit Accessibility Hub</a>
+
+                            <h3 style="margin-top: 30px;">📚 FRAME Faculty Resources</h3>
+                            <p><strong>FRAME (Faculty Resources for Accessible Media Essentials)</strong> is a Canvas center providing videos, step-by-step instructions, and accessibility resources for faculty. Regular workshops available!</p>
+                            <a href="https://accessibility.asu.edu/asu-accessibility/faculty-resources-frame" class="tool-link secondary">Explore FRAME Resources</a>
+
+                            <h3 style="margin-top: 30px;">👥 Digital Accessibility Liaisons</h3>
+                            <p>Join monthly recorded training sessions on various accessibility topics. Connect with ASU's accessibility community and stay updated on best practices.</p>
+                            <a href="https://accessibility.asu.edu/training" class="tool-link secondary">Join the Community</a>
+
+                            <h3 style="margin-top: 30px;">🎬 LinkedIn Learning Courses</h3>
+                            <p>Free for ASU faculty and staff! Continue your accessibility education with these comprehensive courses:</p>
+                            <ul class="resources-list" style="margin-top: 15px;">
+                                <li><strong>"Digital Accessibility for the Modern Workplace"</strong> (3 hours) - Covers accessible meetings, presentations, and communications</li>
+                                <li><strong>"Creating Accessible PDFs"</strong> (5.5 hours) - Word, PowerPoint, and InDesign methods</li>
+                                <li><strong>"Microsoft 365: Making Documents Accessible"</strong> - Video series on Office tools</li>
+                            </ul>
+                            <a href="https://accessibility.asu.edu/training" class="tool-link secondary">View All Training</a>
+
+                            <h3 style="margin-top: 30px;">🔧 ASU-Specific Tools & Services</h3>
+                            <ul class="resources-list" style="margin-top: 15px;">
+                                <li><strong>Equidox</strong> - Free cloud-based PDF remediation tool for ASU faculty/staff. Request access via ServiceNow.</li>
+                                <li><strong>ASU Web Accessibility Testing Workshop</strong> - 1-hour workshop on testing your PDFs and documents</li>
+                                <li><strong>ASU Library Course Resource Services (CRS)</strong> - For published materials, handles links, content accessibility, and PDF remediation</li>
+                                <li><strong>Equatio</strong> - Digital equation accessibility tool for STEM content</li>
+                            </ul>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
+                            <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
+                        </div>
+                    </div>
+                `,
+
+                'testing-content': `
+                    <div class="result-section">
+                        <h2>🔍 Testing Your Content</h2>
+                        <p>Use these tools and methods to validate the accessibility of your content.</p>
+
+                        <div class="tool-recommendation">
+                            <h3>🤖 Automated Testing Tools</h3>
+                            <p>These tools provide initial assessment and catch 20-30% of accessibility issues:</p>
+                            <ul class="resources-list" style="margin-top: 15px;">
+                                <li>
+                                    <strong>WAVE Browser Extension</strong> - Provides visual feedback on accessibility issues
+                                    <a href="https://wave.webaim.org/extension/" class="tool-link secondary">Get WAVE</a>
+                                </li>
+                                <li>
+                                    <strong>Siteimprove</strong> - Continuous monitoring - ASU units can request free scanning
+                                    <a href="https://brandguide.asu.edu/tools/software/siteimprove" class="tool-link secondary">ASU Siteimprove</a>
+                                </li>
+                            </ul>
+
+                            <h3 style="margin-top: 30px;">📋 Manual Testing</h3>
+                            <ul class="resources-list" style="margin-top: 15px;">
+                                <li>
+                                    <strong>ASU Web Accessibility Audit Tool</strong> - Step-by-step guided evaluation tool
+                                    <a href="https://accessibility.asu.edu/testing/audit" class="tool-link secondary">Audit Tool</a>
+                                </li>
+                            </ul>
+
+                            <h3 style="margin-top: 30px;">⌨️ Keyboard Testing</h3>
+                            <p>Test that all functionality is available using only a keyboard (Tab, Enter, Space, Arrow keys).</p>
+                            <a href="https://accessibility.asu.edu/articles/keyboard" class="tool-link secondary">Keyboard Testing Guide</a>
+
+                            <h3 style="margin-top: 30px;">🎧 Screen Reader Testing</h3>
+                            <p>Test your content with real screen readers to ensure they're truly accessible:</p>
+                            <ul class="resources-list" style="margin-top: 15px;">
+                                <li>
+                                    <strong>JAWS (Windows)</strong> - Free for ASU faculty/staff via Freedom Scientific portal (40.5% of users use JAWS)
+                                    <a href="https://accessibility.asu.edu/testing/web" class="tool-link secondary">ASU Access Info</a>
+                                </li>
+                                <li>
+                                    <strong>NVDA (Windows)</strong> - Free open-source screen reader (37.7% of users use NVDA)
+                                    <a href="https://www.nvaccess.org/" class="tool-link secondary">Download NVDA</a>
+                                </li>
+                                <li>
+                                    <strong>VoiceOver (Mac/iOS)</strong> - Pre-installed on Apple devices (70.6% of mobile users use VoiceOver)
+                                    <a href="https://support.apple.com/guide/voiceover/welcome/mac" class="tool-link secondary">VoiceOver Guide</a>
+                                </li>
+                            </ul>
+
+                            <div class="info-box" style="margin-top: 20px;">
+                                <strong>💡 Testing Best Practices:</strong>
+                                <ol style="padding-left: 20px; margin-top: 10px;">
+                                    <li>Start with automated tools (WAVE, Siteimprove) for initial assessment</li>
+                                    <li>Test keyboard navigation - can you reach all interactive elements?</li>
+                                    <li>Use screen readers to verify content is readable in logical order</li>
+                                    <li>Run manual audit for comprehensive WCAG 2.1 AA compliance</li>
+                                    <li>Test with real users with disabilities when possible</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" onclick="startOver()"><span aria-hidden="true">🔄</span> Restart</button>
                             <a href="deploy.html" class="btn btn-primary"><span aria-hidden="true">🚀</span> Deployment Guide</a>
                         </div>
                     </div>
