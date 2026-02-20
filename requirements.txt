@@ -5,3 +5,4 @@ xhtml2pdf==0.2.15
 Werkzeug==3.0.1
 Pillow==10.1.0
 html5lib==1.1
+markdown==3.5.1

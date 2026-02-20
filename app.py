@@ -332,5 +332,68 @@ def cleanup(session_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/deploy')
+def deploy_guide():
+    """Show easy deployment guide for non-technical users"""
+    return render_template('deploy.html')
+
+@app.route('/training')
+def training():
+    """Show PDF remediation training guide"""
+    return render_template('training.html')
+
+@app.route('/decision')
+def decision_maker():
+    """Show accessibility tool decision maker"""
+    return render_template('decision.html')
+
+@app.route('/deployment-docs')
+def deployment_docs():
+    """Show full deployment documentation"""
+    try:
+        # Read DEPLOYMENT.md and render as HTML
+        with open('DEPLOYMENT.md', 'r', encoding='utf-8') as f:
+            import markdown
+            content = f.read()
+            html_content = markdown.markdown(content, extensions=['extra', 'codehilite', 'toc'])
+            return render_template('docs.html', content=html_content)
+    except ImportError:
+        # If markdown library not available, serve as plain text
+        with open('DEPLOYMENT.md', 'r', encoding='utf-8') as f:
+            content = f.read()
+            return f'<pre style="padding: 20px; max-width: 1000px; margin: 0 auto;">{content}</pre>'
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/server-info')
+def server_info():
+    """Get server IP address and access URL"""
+    try:
+        import socket
+
+        # Get local IP address
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            # Connect to external server (doesn't actually send data)
+            s.connect(('8.8.8.8', 80))
+            ip_address = s.getsockname()[0]
+        except Exception:
+            ip_address = '127.0.0.1'
+        finally:
+            s.close()
+
+        # Build full URL
+        port = 8080
+        url = f'http://{ip_address}:{port}'
+
+        return jsonify({
+            'success': True,
+            'ip': ip_address,
+            'port': port,
+            'url': url
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)
