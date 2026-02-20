@@ -67,3 +67,5 @@ Thumbs.db
 # Output directories (temporary processing files)
 outputs/
 test_output/
+test_*/
+static/
